@@ -1,14 +1,12 @@
 import type { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
+import type { TokenPayload } from '../interfaces/index.js';
 
 // Extend Express Request to include user
 declare global {
   namespace Express {
     interface Request {
-      user?: {
-        id: number;
-        username: string;
-      };
+      user?: TokenPayload;
     }
   }
 }
@@ -27,10 +25,7 @@ export const authenticateToken = (
   }
 
   try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET as string) as {
-      id: number;
-      username: string;
-    };
+    const decoded = jwt.verify(token, process.env.JWT_SECRET as string) as TokenPayload;
     req.user = decoded;
     next();
   } catch (err) {

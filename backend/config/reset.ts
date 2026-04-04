@@ -1,5 +1,5 @@
 // dotenv is already loaded in database.ts before importing pool
-import { pool } from './database.ts';
+import { pool } from './database.js';
 
 const resetDatabase = async () => {
   const client = await pool.connect();

@@ -1,14 +1,15 @@
 import { Router } from 'express';
-import authController from '../controllers/auth.controller.js';
+import * as authController from '../controllers/auth.controller.js';
+import { authenticateToken } from '../middleware/auth.middleware.js';
 
 const router = Router();
 
-// Routes for authentication
-
-// Login route
+// Public routes
 router.post('/login', authController.loginUser);
-
-// Register route
 router.post('/register', authController.registerUser);
+
+// Protected routes
+router.get('/me', authenticateToken, authController.getCurrentUser);
+router.put('/me', authenticateToken, authController.updateUser);
 
 export default router;
