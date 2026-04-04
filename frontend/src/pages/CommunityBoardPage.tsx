@@ -4,17 +4,8 @@ const CATEGORIES = ["All", "Education", "Healthcare", "New Tech"] as const;
 
 export default function CommunityBoardPage() {
   return (
-    <section className="mx-auto max-w-3xl px-4 py-10">
-      <div className="mb-6 flex items-center justify-between">
-        <h1 className="text-2xl font-bold text-gray-900">Community Board</h1>
-        <Link
-          to="/community/new"
-          className="rounded-md bg-indigo-600 px-4 py-2 text-sm font-semibold text-white hover:bg-indigo-700"
-        >
-          New Post
-        </Link>
-      </div>
-
+    <section className="mx-auto max-w-3xl px-4 py-6">
+      {/* Category filter — "New Post" moved to FAB in AppLayout */}
       <div className="mb-6 flex gap-2">
         {CATEGORIES.map((cat) => (
           <button
