@@ -1,0 +1,9 @@
+{
+  "name": "arroz-con-code",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "frontend": "npm run dev --prefix frontend",
+    "backend": "npm run dev --prefix backend"
+  }
+}
