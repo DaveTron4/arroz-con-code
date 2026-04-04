@@ -1,8 +1,8 @@
 import type { Response, Request } from 'express';
-import { pool } from '../config/database.js';
+import { pool } from '../config/database.ts';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
-import type { LoginRequest, RegisterRequest, TokenPayload } from '../interfaces/auth.interfaces.js';
+import type { LoginRequest, RegisterRequest, TokenPayload } from '../interfaces/auth.interfaces.ts';
 
 // Validation helpers
 const validateEmail = (email: string): boolean => {
@@ -49,7 +49,7 @@ export const loginUser = async (req: Request, res: Response): Promise<void> => {
 
     // Fetch user from database
     const result = await pool.query(
-      'SELECT id, username, password_hash, email, display_name, avatar_url FROM users WHERE username = $1 AND deleted_at IS NULL',
+      'SELECT id, username, password_hash, email, display_name, avatar_url, role FROM users WHERE username = $1 AND deleted_at IS NULL',
       [username.trim()]
     );
     const user = result.rows[0];
@@ -88,6 +88,7 @@ export const loginUser = async (req: Request, res: Response): Promise<void> => {
         email: user.email,
         displayName: user.display_name,
         avatarUrl: user.avatar_url,
+        role: user.role,
       },
     });
   } catch (err) {
@@ -102,7 +103,7 @@ export const loginUser = async (req: Request, res: Response): Promise<void> => {
  */
 export const registerUser = async (req: Request, res: Response): Promise<void> => {
   try {
-    const { username, password, email } = req.body as RegisterRequest;
+    const { username, password, email, role } = req.body as RegisterRequest;
 
     // Validation
     if (!username || !password || !email) {
@@ -112,6 +113,7 @@ export const registerUser = async (req: Request, res: Response): Promise<void> =
 
     const trimmedUsername = username.trim();
     const trimmedEmail = email.trim().toLowerCase();
+    const userRole = role && ['regular', 'professional'].includes(role) ? role : 'regular';
 
     // Validate username
     const usernameError = validateUsername(trimmedUsername);
@@ -148,8 +150,8 @@ export const registerUser = async (req: Request, res: Response): Promise<void> =
 
     // Insert new user into database
     const newUserResult = await pool.query(
-      'INSERT INTO users (username, password_hash, email, display_name) VALUES ($1, $2, $3, $4) RETURNING id, username, email, display_name',
-      [trimmedUsername, passwordHash, trimmedEmail, trimmedUsername]
+      'INSERT INTO users (username, password_hash, email, display_name, role) VALUES ($1, $2, $3, $4, $5) RETURNING id, username, email, display_name, role',
+      [trimmedUsername, passwordHash, trimmedEmail, trimmedUsername, userRole]
     );
 
     const newUser = newUserResult.rows[0];
@@ -174,6 +176,7 @@ export const registerUser = async (req: Request, res: Response): Promise<void> =
         username: newUser.username,
         email: newUser.email,
         displayName: newUser.display_name,
+        role: newUser.role,
       },
     });
   } catch (err) {
@@ -195,7 +198,7 @@ export const getCurrentUser = async (req: Request, res: Response): Promise<void>
     }
 
     const result = await pool.query(
-      'SELECT id, username, email, display_name, avatar_url, created_at FROM users WHERE id = $1 AND deleted_at IS NULL',
+      'SELECT id, username, email, display_name, avatar_url, role, created_at FROM users WHERE id = $1 AND deleted_at IS NULL',
       [userId]
     );
 
@@ -212,6 +215,7 @@ export const getCurrentUser = async (req: Request, res: Response): Promise<void>
         email: user.email,
         displayName: user.display_name,
         avatarUrl: user.avatar_url,
+        role: user.role,
         createdAt: user.created_at,
       },
     });
@@ -242,7 +246,7 @@ export const updateUser = async (req: Request, res: Response): Promise<void> => 
 
     // Update user
     const result = await pool.query(
-      'UPDATE users SET display_name = COALESCE($1, display_name), avatar_url = COALESCE($2, avatar_url), updated_at = CURRENT_TIMESTAMP WHERE id = $3 AND deleted_at IS NULL RETURNING id, username, email, display_name, avatar_url',
+      'UPDATE users SET display_name = COALESCE($1, display_name), avatar_url = COALESCE($2, avatar_url), updated_at = CURRENT_TIMESTAMP WHERE id = $3 AND deleted_at IS NULL RETURNING id, username, email, display_name, avatar_url, role',
       [displayName || null, avatarUrl || null, userId]
     );
 
@@ -260,6 +264,7 @@ export const updateUser = async (req: Request, res: Response): Promise<void> => 
         email: user.email,
         displayName: user.display_name,
         avatarUrl: user.avatar_url,
+        role: user.role,
       },
     });
   } catch (err) {

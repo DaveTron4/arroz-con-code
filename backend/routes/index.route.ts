@@ -1,8 +1,8 @@
 import { Router } from 'express';
 
 // Import route modules
-import authRoutes from './auth.route.js';
-import postsRoutes from './posts.route.js';
+import authRoutes from './auth.route.ts';
+import postsRoutes from './posts.route.ts';
 
 const router = Router();
 

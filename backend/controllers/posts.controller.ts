@@ -1,5 +1,5 @@
 import type { Request, Response } from 'express';
-import { pool } from '../config/database.js';
+import { pool } from '../config/database.ts';
 
 // GET /api/posts
 // Public - supports ?category=Education&page=1&limit=10

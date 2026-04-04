@@ -1,6 +1,6 @@
 import type { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
-import type { TokenPayload } from '../interfaces/index.js';
+import type { TokenPayload } from '../interfaces/index.ts';
 
 // Extend Express Request to include user
 declare global {

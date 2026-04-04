@@ -9,6 +9,7 @@ export interface UserModel {
   password_hash: string;
   display_name: string | null;
   avatar_url: string | null;
+  role: 'regular' | 'professional';
   created_at: string;
   updated_at: string;
   deleted_at: string | null;
@@ -20,6 +21,7 @@ export interface PostModel {
   title: string;
   body: string;
   category: 'Education' | 'Healthcare' | 'New Tech';
+  type: 'post' | 'article';
   image_url: string | null;
   created_at: string;
   updated_at: string;

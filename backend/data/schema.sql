@@ -10,6 +10,7 @@ CREATE TABLE users (
   password_hash VARCHAR(255) NOT NULL,
   display_name VARCHAR(100),
   avatar_url VARCHAR(255),
+  role VARCHAR(20) DEFAULT 'regular' NOT NULL, -- 'regular' or 'professional'
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   deleted_at TIMESTAMP
@@ -22,6 +23,7 @@ CREATE TABLE posts (
   title VARCHAR(255) NOT NULL,
   body TEXT NOT NULL,
   category VARCHAR(50) NOT NULL, -- 'Education', 'Healthcare', 'New Tech'
+  type VARCHAR(20) DEFAULT 'post' NOT NULL, -- 'post' or 'article' (only professionals can create articles)
   image_url VARCHAR(255),
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -113,6 +115,7 @@ CREATE TABLE resources (
 
 CREATE INDEX idx_posts_user_id ON posts(user_id);
 CREATE INDEX idx_posts_category ON posts(category);
+CREATE INDEX idx_posts_type ON posts(type);
 CREATE INDEX idx_posts_created_at ON posts(created_at DESC);
 CREATE INDEX idx_comments_post_id ON comments(post_id);
 CREATE INDEX idx_comments_user_id ON comments(user_id);
@@ -124,6 +127,7 @@ CREATE INDEX idx_chat_messages_user_id ON chat_messages(user_id);
 CREATE INDEX idx_chat_messages_session_id ON chat_messages(session_id);
 CREATE INDEX idx_resources_category ON resources(category);
 CREATE INDEX idx_users_email ON users(email);
+CREATE INDEX idx_users_role ON users(role);
 
 -- ============================================
 -- VIEWS for Common Queries
@@ -137,9 +141,11 @@ SELECT
   u.username,
   u.display_name,
   u.avatar_url,
+  u.role,
   p.title,
   p.body,
   p.category,
+  p.type,
   p.image_url,
   p.created_at,
   COUNT(DISTINCT l.id) as like_count,

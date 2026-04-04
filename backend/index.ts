@@ -3,10 +3,10 @@ dotenv.config();
 
 import express from 'express';
 import cors from 'cors';
-import { pool } from './config/database.js';
+import { pool } from './config/database.ts';
 
 // Import routes
-import indexRoutes from './routes/index.route.js';
+import indexRoutes from './routes/index.route.ts';
 
 const app = express();
 const PORT = process.env.PORT || 3000;

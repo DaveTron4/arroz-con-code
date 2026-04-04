@@ -3,10 +3,13 @@
  */
 
 // Auth Interfaces
-export * from './auth.interfaces.js';
+export * from './auth.interfaces.ts';
 
 // Model Interfaces
-export * from './models.interfaces.js';
+export * from './models.interfaces.ts';
 
 // Express Interfaces
-export * from './express.interfaces.js';
+export * from './express.interfaces.ts';
+
+// Post Interfaces
+export * from './posts.interfaces.ts';

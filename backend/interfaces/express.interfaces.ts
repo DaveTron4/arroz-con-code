@@ -3,7 +3,7 @@
  */
 
 import type { Request as ExpressRequest } from 'express';
-import type { TokenPayload } from './auth.interfaces.js';
+import type { TokenPayload } from './auth.interfaces.ts';
 
 declare global {
   namespace Express {
