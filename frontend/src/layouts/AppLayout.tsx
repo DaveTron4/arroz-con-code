@@ -1,26 +1,28 @@
 import { Outlet, NavLink, Link, useLocation, useNavigate } from "react-router";
-
-const PAGE_TITLES: Record<string, string> = {
-  "/chat": "AI Chat",
-  "/community": "Community",
-  "/community/new": "New Post",
-  "/settings": "Settings",
-  "/signup": "Sign Up",
-  "/signin": "Sign In",
-};
-
-const BACK_ROUTES = ["/community/new", "/signup", "/signin"];
+import { useUITranslation } from "../hooks/useUITranslation";
 
 export default function AppLayout() {
   const location = useLocation();
   const navigate = useNavigate();
+  const { t } = useUITranslation();
+
+  const PAGE_TITLES: Record<string, string> = {
+    "/chat": t("aiChat"),
+    "/community": t("community"),
+    "/community/new": t("newPost"),
+    "/settings": t("settings"),
+    "/signup": t("signUp"),
+    "/signin": t("signIn"),
+  };
+
+  const BACK_ROUTES = ["/community/new", "/signup", "/signin"];
 
   const isPostDetail =
     location.pathname.startsWith("/community/") &&
     location.pathname !== "/community";
 
   const title = isPostDetail
-    ? "Post"
+    ? t("post")
     : (PAGE_TITLES[location.pathname] ?? "Arroz con Code");
 
   const showBack = BACK_ROUTES.includes(location.pathname) || isPostDetail;
@@ -34,7 +36,7 @@ export default function AppLayout() {
           <button
             onClick={() => navigate(-1)}
             className="flex items-center justify-center rounded-full p-1 text-gray-500 hover:bg-gray-100"
-            aria-label="Go back"
+            aria-label={t("goBack")}
           >
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
               <polyline points="15 18 9 12 15 6" />
@@ -61,7 +63,7 @@ export default function AppLayout() {
         <Link
           to="/community/new"
           className="fixed bottom-24 right-5 z-50 flex h-14 w-14 items-center justify-center rounded-full bg-indigo-600 text-white shadow-lg hover:bg-indigo-700"
-          aria-label="New post"
+          aria-label={t("createPost")}
         >
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
             <line x1="12" y1="5" x2="12" y2="19" />
@@ -83,7 +85,7 @@ export default function AppLayout() {
           <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
             <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
           </svg>
-          AI Chat
+          {t("aiChat")}
         </NavLink>
 
         <NavLink
@@ -100,7 +102,7 @@ export default function AppLayout() {
             <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
             <path d="M16 3.13a4 4 0 0 1 0 7.75" />
           </svg>
-          Community
+          {t("community")}
         </NavLink>
 
         <NavLink
@@ -115,7 +117,7 @@ export default function AppLayout() {
             <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
             <circle cx="12" cy="7" r="4" />
           </svg>
-          Profile
+          {t("profile")}
         </NavLink>
       </nav>
     </div>

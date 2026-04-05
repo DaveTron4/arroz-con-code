@@ -1,10 +1,12 @@
 import { FormEvent, useState } from "react";
 import { Link, useNavigate } from "react-router";
 import { useAuth } from "../context/AuthContext";
+import { useUITranslation } from "../hooks/useUITranslation";
 
 export default function SignUpPage() {
   const { register, loading, error } = useAuth();
   const navigate = useNavigate();
+  const { t } = useUITranslation();
   
   const [formData, setFormData] = useState({
     username: "",
@@ -53,15 +55,15 @@ export default function SignUpPage() {
 
     // Validation
     if (!formData.username.trim()) {
-      setLocalError("Username is required");
+      setLocalError(t("usernameRequired"));
       return;
     }
     if (!formData.email.trim()) {
-      setLocalError("Email is required");
+      setLocalError(t("emailRequired"));
       return;
     }
     if (formData.password.length < 8) {
-      setLocalError("Password must be at least 8 characters");
+      setLocalError(`${t("password")} ${t("at least 8 characters")}`);
       return;
     }
 
@@ -79,7 +81,7 @@ export default function SignUpPage() {
       navigate("/", { replace: true });
     } catch (err) {
       // Error is already set in context, but we also keep local error
-      setLocalError(err instanceof Error ? err.message : "Registration failed");
+      setLocalError(err instanceof Error ? err.message : t("registerFailed"));
     }
   };
 
@@ -88,7 +90,7 @@ export default function SignUpPage() {
   return (
     
     <section className="mx-auto flex max-w-md flex-col gap-6 px-4 py-16">
-      <h1 className="text-3xl font-bold text-gray-900">Create an account</h1>
+      <h1 className="text-3xl font-bold text-gray-900">{t("createAccount")}</h1>
       
       {displayError && (
         <div className="rounded-md bg-red-50 p-3 text-sm text-red-800">
@@ -98,20 +100,20 @@ export default function SignUpPage() {
 
       {geolocationStatus === 'denied' && (
         <div className="rounded-md bg-amber-50 p-3 text-sm text-amber-800">
-          Location access denied. You can add your location manually.
+          {t("locationDenied")}
         </div>
       )}
 
       {geolocationStatus === 'success' && (
         <div className="rounded-md bg-green-50 p-3 text-sm text-green-800">
-          ✓ Location detected
+          {t("locationDetected")}
         </div>
       )}
 
       <form onSubmit={handleSubmit} className="flex flex-col gap-4">
         <div className="flex flex-col gap-1">
           <label className="text-sm font-medium text-gray-700" htmlFor="username">
-            Username
+            {t("username")}
           </label>
           <input
             id="username"
@@ -127,7 +129,7 @@ export default function SignUpPage() {
 
         <div className="flex flex-col gap-1">
           <label className="text-sm font-medium text-gray-700" htmlFor="email">
-            Email
+            {t("email")}
           </label>
           <input
             id="email"
@@ -143,7 +145,7 @@ export default function SignUpPage() {
 
         <div className="flex flex-col gap-1">
           <label className="text-sm font-medium text-gray-700" htmlFor="password">
-            Password
+            {t("password")}
           </label>
           <input
             id="password"
@@ -155,12 +157,12 @@ export default function SignUpPage() {
             disabled={loading}
             className="rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 disabled:bg-gray-100"
           />
-          <p className="text-xs text-gray-500">At least 8 characters</p>
+          <p className="text-xs text-gray-500">{t("at least 8 characters")}</p>
         </div>
 
         <div className="flex flex-col gap-1">
           <label className="text-sm font-medium text-gray-700" htmlFor="locationName">
-            City/Location (Optional)
+            {t("location")} ({t("save") === "Save" ? "Optional" : "Opcional"})
           </label>
           <input
             id="locationName"
@@ -181,7 +183,7 @@ export default function SignUpPage() {
 
         <div className="flex flex-col gap-1">
           <label className="text-sm font-medium text-gray-700" htmlFor="preferredLanguage">
-            Preferred Language
+            {t("preferredLanguage")}
           </label>
           <select
             id="preferredLanguage"
@@ -191,8 +193,8 @@ export default function SignUpPage() {
             disabled={loading}
             className="rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 disabled:bg-gray-100"
           >
-            <option value="en">English</option>
-            <option value="es">Español</option>
+            <option value="en">{t("english")}</option>
+            <option value="es">{t("spanish")}</option>
           </select>
         </div>
 
@@ -201,14 +203,14 @@ export default function SignUpPage() {
           disabled={loading}
           className="rounded-md bg-indigo-600 py-2 text-sm font-semibold text-white hover:bg-indigo-700 disabled:bg-gray-400"
         >
-          {loading ? "Creating account..." : "Sign Up"}
+          {loading ? t("creatingAccount") : t("signUp")}
         </button>
       </form>
       
       <p className="text-center text-sm text-gray-500">
-        Already have an account?{" "}
+        {t("alreadyHaveAccount")}{" "}
         <Link to="/signin" className="text-indigo-600 hover:underline">
-          Sign in
+          {t("signIn")}
         </Link>
       </p>
     </section>

@@ -1,11 +1,13 @@
 import { FormEvent, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router";
 import { useAuth } from "../context/AuthContext";
+import { useUITranslation } from "../hooks/useUITranslation";
 
 export default function SignInPage() {
   const { login, loading, error } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
+  const { t } = useUITranslation();
 
   const [formData, setFormData] = useState({
     username: "",
@@ -28,11 +30,11 @@ export default function SignInPage() {
 
     // Validation
     if (!formData.username.trim()) {
-      setLocalError("Username is required");
+      setLocalError(t("usernameRequired"));
       return;
     }
     if (!formData.password) {
-      setLocalError("Password is required");
+      setLocalError(t("passwordRequired"));
       return;
     }
 
@@ -42,7 +44,7 @@ export default function SignInPage() {
       const from = location.state?.from?.pathname ?? "/";
       navigate(from, { replace: true });
     } catch (err) {
-      setLocalError(err instanceof Error ? err.message : "Login failed");
+      setLocalError(err instanceof Error ? err.message : t("loginFailed"));
     }
   };
 
@@ -50,7 +52,7 @@ export default function SignInPage() {
 
   return (
     <section className="mx-auto flex max-w-md flex-col gap-6 px-4 py-16">
-      <h1 className="text-3xl font-bold text-gray-900">Welcome back</h1>
+      <h1 className="text-3xl font-bold text-gray-900">{t("welcomeBack")}</h1>
       
       {displayError && (
         <div className="rounded-md bg-red-50 p-3 text-sm text-red-800">
@@ -61,7 +63,7 @@ export default function SignInPage() {
       <form onSubmit={handleSubmit} className="flex flex-col gap-4">
         <div className="flex flex-col gap-1">
           <label className="text-sm font-medium text-gray-700" htmlFor="username">
-            Username
+            {t("username")}
           </label>
           <input
             id="username"
@@ -77,7 +79,7 @@ export default function SignInPage() {
 
         <div className="flex flex-col gap-1">
           <label className="text-sm font-medium text-gray-700" htmlFor="password">
-            Password
+            {t("password")}
           </label>
           <input
             id="password"
@@ -96,14 +98,14 @@ export default function SignInPage() {
           disabled={loading}
           className="rounded-md bg-indigo-600 py-2 text-sm font-semibold text-white hover:bg-indigo-700 disabled:bg-gray-400"
         >
-          {loading ? "Signing in..." : "Sign In"}
+          {loading ? t("signingIn") : t("signIn")}
         </button>
       </form>
       
       <p className="text-center text-sm text-gray-500">
-        No account yet?{" "}
+        {t("noAccount")}{" "}
         <Link to="/signup" className="text-indigo-600 hover:underline">
-          Sign up
+          {t("signUp")}
         </Link>
       </p>
     </section>

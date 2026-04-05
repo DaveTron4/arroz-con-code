@@ -1,8 +1,10 @@
 import { Link, NavLink } from "react-router";
 import { useAuth } from "../context/AuthContext";
+import { useUITranslation } from "../hooks/useUITranslation";
 
 export default function Navbar() {
   const { isAuthenticated, logout } = useAuth();
+  const { t } = useUITranslation();
 
   return (
     <header className="sticky top-0 z-50 border-b border-gray-200 bg-white/80 backdrop-blur-sm">
@@ -18,7 +20,7 @@ export default function Navbar() {
               isActive ? "text-indigo-600" : "text-gray-600 hover:text-gray-900"
             }
           >
-            AI Chat
+            {t("home")}
           </NavLink>
           <NavLink
             to="/community"
@@ -26,7 +28,7 @@ export default function Navbar() {
               isActive ? "text-indigo-600" : "text-gray-600 hover:text-gray-900"
             }
           >
-            Community
+            {t("community")}
           </NavLink>
         </div>
 
@@ -41,25 +43,25 @@ export default function Navbar() {
                     : "text-gray-600 hover:text-gray-900"
                 }
               >
-                Settings
+                {t("settings")}
               </NavLink>
               <button
                 onClick={logout}
                 className="rounded-md bg-gray-100 px-3 py-1.5 text-gray-700 hover:bg-gray-200"
               >
-                Sign Out
+                {t("signOut")}
               </button>
             </>
           ) : (
             <>
               <Link to="/signin" className="text-gray-600 hover:text-gray-900">
-                Sign In
+                {t("signIn")}
               </Link>
               <Link
                 to="/signup"
                 className="rounded-md bg-indigo-600 px-3 py-1.5 text-white hover:bg-indigo-700"
               >
-                Sign Up
+                {t("signUp")}
               </Link>
             </>
           )}

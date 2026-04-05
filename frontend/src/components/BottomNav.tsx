@@ -1,6 +1,8 @@
 import { NavLink } from "react-router";
+import { useUITranslation } from "../hooks/useUITranslation";
 
 export default function BottomNav() {
+  const { t } = useUITranslation();
   const linkClass = ({ isActive }: { isActive: boolean }) =>
     `flex flex-1 flex-col items-center gap-1 py-3 text-xs font-medium ${
       isActive ? "text-indigo-600" : "text-gray-400"
@@ -27,7 +29,7 @@ export default function BottomNav() {
           <line x1="3" y1="12" x2="3.01" y2="12" />
           <line x1="3" y1="18" x2="3.01" y2="18" />
         </svg>
-        Feed
+        {t("home")}
       </NavLink>
 
       {/* Profile */}
@@ -45,7 +47,7 @@ export default function BottomNav() {
           <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
           <circle cx="12" cy="7" r="4" />
         </svg>
-        Profile
+        {t("profile")}
       </NavLink>
     </nav>
   );
