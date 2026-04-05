@@ -42,7 +42,7 @@ export default function RootLayout() {
       {showFAB && <FAB />}
 
       {/* Mobile: bottom sticky nav */}
-      <BottomNav onOpenSearch={() => setSearchOpen(true)} />
+      <BottomNav />
 
       {/* AI Search Modal */}
       <AISearchModal isOpen={searchOpen} onClose={() => setSearchOpen(false)} />

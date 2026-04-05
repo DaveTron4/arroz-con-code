@@ -1,11 +1,7 @@
 import { NavLink } from "react-router";
 import { useUITranslation } from "../hooks/useUITranslation";
 
-interface Props {
-  onOpenSearch: () => void;
-}
-
-export default function BottomNav({ onOpenSearch }: Props) {
+export default function BottomNav() {
   const { t } = useUITranslation();
   const linkClass = ({ isActive }: { isActive: boolean }) =>
     `flex flex-1 flex-col items-center gap-1 py-3 text-xs font-medium ${
@@ -35,27 +31,6 @@ export default function BottomNav({ onOpenSearch }: Props) {
         </svg>
         {t("home")}
       </NavLink>
-
-      {/* AI Search */}
-      <button
-        onClick={onOpenSearch}
-        className="flex flex-1 flex-col items-center gap-1 py-3 text-xs font-medium text-gray-400 hover:text-blue-600"
-      >
-        <svg
-          width="22"
-          height="22"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="1.8"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-        >
-          <circle cx="11" cy="11" r="8" />
-          <line x1="21" y1="21" x2="16.65" y2="16.65" />
-        </svg>
-        {t("aiSearch")}
-      </button>
 
       {/* Profile */}
       <NavLink to="/profile/me" className={linkClass}>
