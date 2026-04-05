@@ -14,6 +14,12 @@ export * from './express.interfaces.ts';
 // Post Interfaces
 export * from './posts.interfaces.ts';
 
+// Comment Interfaces
+export * from './comments.interfaces.ts';
+
+// Like Interfaces
+export * from './likes.interfaces.ts';
+
 // Fact-Check Interfaces
 export * from './factcheck.interfaces.ts';
 
