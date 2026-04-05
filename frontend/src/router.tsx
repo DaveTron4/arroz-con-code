@@ -9,6 +9,7 @@ import PostDetailPage from "./pages/PostDetailPage";
 import CreatePostPage from "./pages/CreatePostPage";
 import ArticleDetailPage from "./pages/ArticleDetailPage";
 import CreateArticlePage from "./pages/CreateArticlePage";
+import CommunityBoardPage from "./pages/CommunityBoardPage";
 import ProfilePage from "./pages/ProfilePage";
 import SettingsPage from "./pages/SettingsPage";
 
@@ -17,6 +18,7 @@ export const router = createBrowserRouter([
     element: <RootLayout />,
     children: [
       { path: "/", element: <FeedPage /> },
+      { path: "/community", element: <CommunityBoardPage /> },
       { path: "/signup", element: <SignUpPage /> },
       { path: "/signin", element: <SignInPage /> },
       { path: "/post/:id", element: <PostDetailPage /> },
