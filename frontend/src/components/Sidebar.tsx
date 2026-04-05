@@ -1,9 +1,6 @@
 import { NavLink, useNavigate } from "react-router";
 import { useAuth } from "../context/AuthContext";
-<<<<<<< HEAD
 import { useUITranslation } from "../hooks/useUITranslation";
-=======
->>>>>>> 5660f4070557382c9a86f0cf2609245df82fd105
 
 export default function Sidebar() {
   const { isAuthenticated, logout } = useAuth();
@@ -64,20 +61,7 @@ export default function Sidebar() {
           {t("createPost")}
         </NavLink>
         <NavLink to="/profile/me" className={navClass}>
-<<<<<<< HEAD
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-=======
-          <svg
-            width="18"
-            height="18"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          >
->>>>>>> 5660f4070557382c9a86f0cf2609245df82fd105
             <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
             <circle cx="12" cy="7" r="4" />
           </svg>
