@@ -36,10 +36,6 @@ export default function FeedPage() {
     }
   }, []);
 
-  // Refetch when category changes
-  useEffect(() => {
-    refetch();
-  }, [activeCategory, refetch]);
 
   return (
     <div className="mx-auto max-w-2xl">
