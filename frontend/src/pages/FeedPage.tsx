@@ -17,9 +17,7 @@ export default function FeedPage() {
 
   // Fetch posts with active category filter
   const { posts, loading, error, refetch } = usePosts(
-    activeCategory !== "All"
-      ? { category: activeCategory }
-      : undefined
+    activeCategory !== "All" ? { category: activeCategory } : undefined,
   );
 
   // Get user's geolocation on component mount
@@ -31,11 +29,10 @@ export default function FeedPage() {
         },
         () => {
           setLocationDenied(true);
-        }
+        },
       );
     }
   }, []);
-
 
   return (
     <div className="mx-auto max-w-2xl">
@@ -45,7 +42,7 @@ export default function FeedPage() {
           <span className="text-xs text-amber-700">
             📍 Location not available
           </span>
-          <button 
+          <button
             onClick={() => navigate("/post/new")}
             className="ml-auto text-xs font-medium text-amber-700 hover:underline"
           >
@@ -62,7 +59,7 @@ export default function FeedPage() {
             onClick={() => setActiveCategory(cat)}
             className={`shrink-0 rounded-full px-4 py-1.5 text-sm font-medium transition-colors ${
               activeCategory === cat
-                ? "bg-indigo-600 text-white"
+                ? "bg-blue-600 text-white"
                 : "bg-gray-100 text-gray-600 hover:bg-gray-200"
             }`}
           >
@@ -118,7 +115,7 @@ export default function FeedPage() {
           {user && (
             <button
               onClick={() => navigate("/post/new")}
-              className="mt-4 rounded-md bg-indigo-600 px-4 py-2 text-sm font-medium text-white hover:bg-indigo-700"
+              className="mt-4 rounded-md bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700"
             >
               Create first post
             </button>

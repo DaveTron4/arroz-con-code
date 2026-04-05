@@ -12,9 +12,13 @@ export default function CreatePostPage() {
 
   const [title, setTitle] = useState("");
   const [body, setBody] = useState("");
-  const [category, setCategory] = useState<(typeof CATEGORIES)[number]>("Education");
+  const [category, setCategory] =
+    useState<(typeof CATEGORIES)[number]>("Education");
   const [locationName, setLocationName] = useState("");
-  const [coordinates, setCoordinates] = useState<{ latitude: number; longitude: number } | null>(null);
+  const [coordinates, setCoordinates] = useState<{
+    latitude: number;
+    longitude: number;
+  } | null>(null);
   const [geoError, setGeoError] = useState<string | null>(null);
   const [formError, setFormError] = useState<string | null>(null);
   const [isArticle, setIsArticle] = useState(false);
@@ -38,9 +42,11 @@ export default function CreatePostPage() {
           });
         },
         (err) => {
-          setGeoError("Could not access location. You can still post without location.");
+          setGeoError(
+            "Could not access location. You can still post without location.",
+          );
           console.log("Geolocation error:", err.message);
-        }
+        },
       );
     }
   }, []);
@@ -83,14 +89,15 @@ export default function CreatePostPage() {
         locationName: locationName || undefined,
       };
 
-      console.log('Creating post with data:', postData);
+      console.log("Creating post with data:", postData);
       const newPost = await createPost(postData);
-      console.log('Post created:', newPost);
-      
+      console.log("Post created:", newPost);
+
       // Redirect to post detail page
       navigate(`/post/${newPost.id}`);
     } catch (err) {
-      const errorMsg = err instanceof Error ? err.message : "Unknown error occurred";
+      const errorMsg =
+        err instanceof Error ? err.message : "Unknown error occurred";
       console.error("Error creating post:", errorMsg);
       // Error is already set in the hook, but let's ensure it's displayed
       if (!error) {
@@ -102,7 +109,7 @@ export default function CreatePostPage() {
   return (
     <section className="mx-auto max-w-2xl px-4 py-10">
       <h1 className="mb-6 text-2xl font-bold text-gray-900">Create a Post</h1>
-      
+
       {(formError || error) && (
         <div className="mb-4 rounded-md bg-red-50 p-3 text-sm text-red-700">
           {formError || error}
@@ -111,7 +118,8 @@ export default function CreatePostPage() {
 
       {coordinates && (
         <div className="mb-4 rounded-md bg-blue-50 p-3 text-sm text-blue-700">
-          📍 Location detected: {coordinates.latitude.toFixed(4)}, {coordinates.longitude.toFixed(4)}
+          📍 Location detected: {coordinates.latitude.toFixed(4)},{" "}
+          {coordinates.longitude.toFixed(4)}
         </div>
       )}
 
@@ -153,13 +161,18 @@ export default function CreatePostPage() {
         </div>
 
         <div className="flex flex-col gap-1">
-          <label className="text-sm font-medium text-gray-700" htmlFor="category">
+          <label
+            className="text-sm font-medium text-gray-700"
+            htmlFor="category"
+          >
             Category
           </label>
           <select
             id="category"
             value={category}
-            onChange={(e) => setCategory(e.target.value as (typeof CATEGORIES)[number])}
+            onChange={(e) =>
+              setCategory(e.target.value as (typeof CATEGORIES)[number])
+            }
             disabled={loading}
             className="rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 disabled:bg-gray-100 disabled:text-gray-500"
           >
@@ -172,16 +185,19 @@ export default function CreatePostPage() {
         </div>
 
         {isProfessional && (
-          <div className="flex items-center gap-2 rounded-md bg-indigo-50 p-3">
+          <div className="flex items-center gap-2 rounded-md bg-blue-50 p-3">
             <input
               id="isArticle"
               type="checkbox"
               checked={isArticle}
               onChange={(e) => setIsArticle(e.target.checked)}
               disabled={loading}
-              className="rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
+              className="rounded border-gray-300 text-blue-600 focus:ring-indigo-500"
             />
-            <label htmlFor="isArticle" className="text-sm font-medium text-gray-700">
+            <label
+              htmlFor="isArticle"
+              className="text-sm font-medium text-gray-700"
+            >
               📰 Publish as Professional Article
             </label>
           </div>
@@ -189,7 +205,10 @@ export default function CreatePostPage() {
 
         {coordinates && (
           <div className="flex flex-col gap-1">
-            <label className="text-sm font-medium text-gray-700" htmlFor="locationName">
+            <label
+              className="text-sm font-medium text-gray-700"
+              htmlFor="locationName"
+            >
               Location Name (Optional)
             </label>
             <input
@@ -207,7 +226,7 @@ export default function CreatePostPage() {
         <button
           type="submit"
           disabled={loading}
-          className="self-start rounded-md bg-indigo-600 px-6 py-2 text-sm font-semibold text-white hover:bg-indigo-700 disabled:bg-gray-400 disabled:cursor-not-allowed"
+          className="self-start rounded-md bg-blue-600 px-6 py-2 text-sm font-semibold text-white hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed"
         >
           {loading ? "Publishing..." : "Publish Post"}
         </button>

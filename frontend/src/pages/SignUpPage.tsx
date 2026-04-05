@@ -5,7 +5,7 @@ import { useAuth } from "../context/AuthContext";
 export default function SignUpPage() {
   const { register, loading, error } = useAuth();
   const navigate = useNavigate();
-  
+
   const [formData, setFormData] = useState({
     username: "",
     email: "",
@@ -16,33 +16,37 @@ export default function SignUpPage() {
     preferredLanguage: "en" as "en" | "es",
   });
   const [localError, setLocalError] = useState<string | null>(null);
-  const [geolocationStatus, setGeolocationStatus] = useState<'idle' | 'loading' | 'success' | 'denied'>('idle');
+  const [geolocationStatus, setGeolocationStatus] = useState<
+    "idle" | "loading" | "success" | "denied"
+  >("idle");
 
   // Get user's geolocation on component mount
   useState(() => {
     if (navigator.geolocation) {
-      setGeolocationStatus('loading');
+      setGeolocationStatus("loading");
       navigator.geolocation.getCurrentPosition(
         (position) => {
-          setFormData(prev => ({
+          setFormData((prev) => ({
             ...prev,
             latitude: position.coords.latitude,
             longitude: position.coords.longitude,
           }));
-          setGeolocationStatus('success');
+          setGeolocationStatus("success");
         },
         () => {
-          setGeolocationStatus('denied');
-        }
+          setGeolocationStatus("denied");
+        },
       );
     }
   });
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
+  ) => {
     const { name, value } = e.target;
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      [name]: name === 'preferredLanguage' ? (value as "en" | "es") : value,
+      [name]: name === "preferredLanguage" ? (value as "en" | "es") : value,
     }));
     setLocalError(null);
   };
@@ -86,23 +90,22 @@ export default function SignUpPage() {
   const displayError = localError || error;
 
   return (
-    
     <section className="mx-auto flex max-w-md flex-col gap-6 px-4 py-16">
       <h1 className="text-3xl font-bold text-gray-900">Create an account</h1>
-      
+
       {displayError && (
         <div className="rounded-md bg-red-50 p-3 text-sm text-red-800">
           {displayError}
         </div>
       )}
 
-      {geolocationStatus === 'denied' && (
+      {geolocationStatus === "denied" && (
         <div className="rounded-md bg-amber-50 p-3 text-sm text-amber-800">
           Location access denied. You can add your location manually.
         </div>
       )}
 
-      {geolocationStatus === 'success' && (
+      {geolocationStatus === "success" && (
         <div className="rounded-md bg-green-50 p-3 text-sm text-green-800">
           ✓ Location detected
         </div>
@@ -110,7 +113,10 @@ export default function SignUpPage() {
 
       <form onSubmit={handleSubmit} className="flex flex-col gap-4">
         <div className="flex flex-col gap-1">
-          <label className="text-sm font-medium text-gray-700" htmlFor="username">
+          <label
+            className="text-sm font-medium text-gray-700"
+            htmlFor="username"
+          >
             Username
           </label>
           <input
@@ -142,7 +148,10 @@ export default function SignUpPage() {
         </div>
 
         <div className="flex flex-col gap-1">
-          <label className="text-sm font-medium text-gray-700" htmlFor="password">
+          <label
+            className="text-sm font-medium text-gray-700"
+            htmlFor="password"
+          >
             Password
           </label>
           <input
@@ -159,7 +168,10 @@ export default function SignUpPage() {
         </div>
 
         <div className="flex flex-col gap-1">
-          <label className="text-sm font-medium text-gray-700" htmlFor="locationName">
+          <label
+            className="text-sm font-medium text-gray-700"
+            htmlFor="locationName"
+          >
             City/Location (Optional)
           </label>
           <input
@@ -174,13 +186,17 @@ export default function SignUpPage() {
           />
           {formData.latitude && formData.longitude && (
             <p className="text-xs text-gray-500">
-              Coordinates: {formData.latitude.toFixed(4)}, {formData.longitude.toFixed(4)}
+              Coordinates: {formData.latitude.toFixed(4)},{" "}
+              {formData.longitude.toFixed(4)}
             </p>
           )}
         </div>
 
         <div className="flex flex-col gap-1">
-          <label className="text-sm font-medium text-gray-700" htmlFor="preferredLanguage">
+          <label
+            className="text-sm font-medium text-gray-700"
+            htmlFor="preferredLanguage"
+          >
             Preferred Language
           </label>
           <select
@@ -199,15 +215,15 @@ export default function SignUpPage() {
         <button
           type="submit"
           disabled={loading}
-          className="rounded-md bg-indigo-600 py-2 text-sm font-semibold text-white hover:bg-indigo-700 disabled:bg-gray-400"
+          className="rounded-md bg-blue-600 py-2 text-sm font-semibold text-white hover:bg-blue-700 disabled:bg-gray-400"
         >
           {loading ? "Creating account..." : "Sign Up"}
         </button>
       </form>
-      
+
       <p className="text-center text-sm text-gray-500">
         Already have an account?{" "}
-        <Link to="/signin" className="text-indigo-600 hover:underline">
+        <Link to="/signin" className="text-blue-600 hover:underline">
           Sign in
         </Link>
       </p>

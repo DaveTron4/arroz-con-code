@@ -3,7 +3,7 @@ import { NavLink } from "react-router";
 export default function BottomNav() {
   const linkClass = ({ isActive }: { isActive: boolean }) =>
     `flex flex-1 flex-col items-center gap-1 py-3 text-xs font-medium ${
-      isActive ? "text-indigo-600" : "text-gray-400"
+      isActive ? "text-blue-600" : "text-gray-400"
     }`;
 
   return (

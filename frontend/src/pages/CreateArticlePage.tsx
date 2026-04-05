@@ -45,7 +45,10 @@ export default function CreateArticlePage() {
         </div>
 
         <div className="flex flex-col gap-1">
-          <label htmlFor="category" className="text-sm font-medium text-gray-700">
+          <label
+            htmlFor="category"
+            className="text-sm font-medium text-gray-700"
+          >
             Category
           </label>
           <select
@@ -83,7 +86,7 @@ export default function CreateArticlePage() {
 
         <button
           type="submit"
-          className="rounded-lg bg-indigo-600 px-6 py-2.5 text-sm font-semibold text-white hover:bg-indigo-700"
+          className="rounded-lg bg-blue-600 px-6 py-2.5 text-sm font-semibold text-white hover:bg-blue-700"
         >
           Publish Article
         </button>

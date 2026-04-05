@@ -23,11 +23,13 @@ export default function ProfilePage() {
   }, [isOwnProfile, isAuthenticated, navigate]);
 
   const { posts, loading: postsLoading } = usePosts(
-    userId ? { userId } : undefined
+    userId ? { userId } : undefined,
   );
 
   const [isEditing, setIsEditing] = useState(false);
-  const [editDisplayName, setEditDisplayName] = useState(user?.displayName || "");
+  const [editDisplayName, setEditDisplayName] = useState(
+    user?.displayName || "",
+  );
   const [editAvatarUrl, setEditAvatarUrl] = useState(user?.avatarUrl || "");
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const [avatarError, setAvatarError] = useState<string | null>(null);
@@ -40,7 +42,7 @@ export default function ProfilePage() {
     setEditAvatarUrl(url);
     setAvatarError(null);
     setPreviewUrl(null);
-    
+
     if (url.trim()) {
       // Validate image URL
       const img = new Image();
@@ -100,16 +102,18 @@ export default function ProfilePage() {
             className="h-16 w-16 rounded-full object-cover"
           />
         ) : (
-          <div className="flex h-16 w-16 items-center justify-center rounded-full bg-indigo-100 text-2xl font-bold text-indigo-600">
+          <div className="flex h-16 w-16 items-center justify-center rounded-full bg-blue-100 text-2xl font-bold text-blue-600">
             {initial}
           </div>
         )}
-        
+
         <div className="flex-1">
           {isEditing ? (
             <div className="space-y-3">
               <div>
-                <label className="text-xs font-medium text-gray-600">Display Name</label>
+                <label className="text-xs font-medium text-gray-600">
+                  Display Name
+                </label>
                 <input
                   type="text"
                   value={editDisplayName}
@@ -118,9 +122,11 @@ export default function ProfilePage() {
                   className="mt-1 w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
                 />
               </div>
-              
+
               <div>
-                <label className="text-xs font-medium text-gray-600">Profile Picture URL</label>
+                <label className="text-xs font-medium text-gray-600">
+                  Profile Picture URL
+                </label>
                 <input
                   type="url"
                   value={editAvatarUrl}
@@ -128,18 +134,18 @@ export default function ProfilePage() {
                   placeholder="https://example.com/image.jpg"
                   className="mt-1 w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
                 />
-                {avatarError && <p className="mt-1 text-xs text-red-600">{avatarError}</p>}
+                {avatarError && (
+                  <p className="mt-1 text-xs text-red-600">{avatarError}</p>
+                )}
               </div>
 
-              {error && (
-                <p className="text-xs text-red-600">{error}</p>
-              )}
+              {error && <p className="text-xs text-red-600">{error}</p>}
 
               <div className="flex gap-2">
                 <button
                   onClick={handleSaveProfile}
                   disabled={loading}
-                  className="rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-medium text-white hover:bg-indigo-700 disabled:opacity-50"
+                  className="rounded-md bg-blue-600 px-3 py-1.5 text-sm font-medium text-white hover:bg-blue-700 disabled:opacity-50"
                 >
                   {loading ? "Saving..." : "Save"}
                 </button>
@@ -159,7 +165,9 @@ export default function ProfilePage() {
                 {user?.role === "professional" ? (
                   <ProfessionalBadge />
                 ) : (
-                  <span className="text-sm text-gray-500">Community Member</span>
+                  <span className="text-sm text-gray-500">
+                    Community Member
+                  </span>
                 )}
                 {user?.locationName && (
                   <span className="text-sm text-gray-400">
@@ -188,7 +196,10 @@ export default function ProfilePage() {
         {postsLoading && (
           <div className="mt-3 space-y-3">
             {[1, 2].map((i) => (
-              <div key={i} className="animate-pulse rounded-lg border border-gray-100 p-4">
+              <div
+                key={i}
+                className="animate-pulse rounded-lg border border-gray-100 p-4"
+              >
                 <div className="mb-2 h-4 w-1/3 rounded bg-gray-200" />
                 <div className="h-4 w-3/4 rounded bg-gray-100" />
               </div>

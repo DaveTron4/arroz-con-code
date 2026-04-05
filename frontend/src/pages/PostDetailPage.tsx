@@ -77,7 +77,7 @@ export default function PostDetailPage() {
         <p className="text-sm text-red-600">{postError || "Post not found."}</p>
         <Link
           to="/"
-          className="mt-4 inline-block text-sm text-indigo-600 hover:underline"
+          className="mt-4 inline-block text-sm text-blue-600 hover:underline"
         >
           Back to feed
         </Link>
@@ -94,7 +94,7 @@ export default function PostDetailPage() {
       {/* Back */}
       <Link
         to="/"
-        className="mb-6 inline-block text-sm text-indigo-600 hover:underline"
+        className="mb-6 inline-block text-sm text-blue-600 hover:underline"
       >
         ← Back to feed
       </Link>
@@ -107,7 +107,7 @@ export default function PostDetailPage() {
               📰 Article
             </span>
           )}
-          <span className="rounded-full bg-indigo-50 px-2 py-0.5 text-xs font-medium text-indigo-700">
+          <span className="rounded-full bg-blue-50 px-2 py-0.5 text-xs font-medium text-blue-700">
             {post.category}
           </span>
           {factCheckLoading && <FactCheckBadge loading />}
@@ -126,9 +126,7 @@ export default function PostDetailPage() {
         <p className="mt-4 whitespace-pre-wrap text-gray-700">{displayBody}</p>
 
         {post.locationName ? (
-          <p className="mt-3 text-xs text-gray-400">
-            📍 {post.locationName}
-          </p>
+          <p className="mt-3 text-xs text-gray-400">📍 {post.locationName}</p>
         ) : null}
 
         <div className="mt-4 flex items-center gap-4">
@@ -207,14 +205,14 @@ export default function PostDetailPage() {
             <button
               type="submit"
               disabled={submitting || !commentBody.trim()}
-              className="rounded-md bg-indigo-600 px-4 py-2 text-sm font-semibold text-white hover:bg-indigo-700 disabled:opacity-50"
+              className="rounded-md bg-blue-600 px-4 py-2 text-sm font-semibold text-white hover:bg-blue-700 disabled:opacity-50"
             >
               {submitting ? "Posting..." : "Post"}
             </button>
           </form>
         ) : (
           <p className="text-sm text-gray-500">
-            <Link to="/signin" className="text-indigo-600 hover:underline">
+            <Link to="/signin" className="text-blue-600 hover:underline">
               Sign in
             </Link>{" "}
             to leave a comment.

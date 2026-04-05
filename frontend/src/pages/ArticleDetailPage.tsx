@@ -16,7 +16,11 @@ export default function ArticleDetailPage() {
   const postId = parseInt(id!);
 
   const { post, loading, error } = usePost(postId);
-  const { factCheck, loading: factCheckLoading, refetch: refetchFactCheck } = useFactCheck(postId);
+  const {
+    factCheck,
+    loading: factCheckLoading,
+    refetch: refetchFactCheck,
+  } = useFactCheck(postId);
   const [translatedBody, setTranslatedBody] = useState<string | null>(null);
 
   // Auto-trigger fact-check if not yet checked
@@ -24,12 +28,17 @@ export default function ArticleDetailPage() {
   useEffect(() => {
     if (factCheck && !factCheck.isFactChecked && postId) {
       // Trigger fact-check and refetch results
-      factCheckAPI.triggerFactCheck(postId).then(() => {
-        // Refetch fact-check data after triggering
-        setTimeout(() => refetchFactCheck(), 500);
-      }).catch(() => {
-        console.log('Fact-check trigger started (results will update when available)');
-      });
+      factCheckAPI
+        .triggerFactCheck(postId)
+        .then(() => {
+          // Refetch fact-check data after triggering
+          setTimeout(() => refetchFactCheck(), 500);
+        })
+        .catch(() => {
+          console.log(
+            "Fact-check trigger started (results will update when available)",
+          );
+        });
     }
   }, [factCheck?.isFactChecked, postId, refetchFactCheck]);
 
@@ -52,7 +61,7 @@ export default function ArticleDetailPage() {
         <p className="text-sm text-red-600">{error || "Article not found."}</p>
         <Link
           to="/"
-          className="mt-4 inline-block text-sm text-indigo-600 hover:underline"
+          className="mt-4 inline-block text-sm text-blue-600 hover:underline"
         >
           Back to feed
         </Link>
@@ -71,16 +80,14 @@ export default function ArticleDetailPage() {
     <section className="mx-auto max-w-2xl px-4 py-8">
       <Link
         to="/"
-        className="mb-6 inline-block text-sm text-indigo-600 hover:underline"
+        className="mb-6 inline-block text-sm text-blue-600 hover:underline"
       >
         ← Back to feed
       </Link>
 
       {/* Category + fact check */}
       <div className="flex flex-wrap items-center gap-2">
-        <span
-          className="inline-flex items-center gap-1 rounded-full bg-purple-50 px-3 py-1 text-xs font-medium text-purple-700"
-        >
+        <span className="inline-flex items-center gap-1 rounded-full bg-purple-50 px-3 py-1 text-xs font-medium text-purple-700">
           📰 Article
         </span>
         <span
@@ -101,7 +108,7 @@ export default function ArticleDetailPage() {
 
       {/* Author info */}
       <div className="mt-3 flex items-center gap-3">
-        <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-indigo-100 text-sm font-semibold text-indigo-600">
+        <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-blue-100 text-sm font-semibold text-blue-600">
           {initial}
         </div>
         <div>
@@ -114,9 +121,7 @@ export default function ArticleDetailPage() {
       </div>
 
       {post.locationName ? (
-        <p className="mt-2 text-xs text-gray-400">
-          📍 {post.locationName}
-        </p>
+        <p className="mt-2 text-xs text-gray-400">📍 {post.locationName}</p>
       ) : null}
 
       {/* Actions */}

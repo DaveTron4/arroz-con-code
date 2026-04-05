@@ -4,7 +4,7 @@ export default function FAB() {
   return (
     <Link
       to="/post/new"
-      className="fixed bottom-20 right-4 z-50 flex items-center gap-2 rounded-full bg-indigo-600 px-5 py-3 text-sm font-semibold text-white shadow-lg hover:bg-indigo-700 active:scale-95 transition-transform md:bottom-6"
+      className="fixed bottom-20 right-4 z-50 flex items-center gap-2 rounded-full bg-blue-600 px-5 py-3 text-sm font-semibold text-white shadow-lg hover:bg-blue-700 active:scale-95 transition-transform md:bottom-6"
       aria-label="Create new post"
     >
       <svg
