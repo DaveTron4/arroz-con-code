@@ -8,14 +8,7 @@ const router = Router();
 router.get('/', postsController.getAllPosts);
 
 // Create a post (PROTECTED - auth required)
-router.post('/', authenticateToken, (req, res) => {
-  const { title, body, category } = req.body;
-  if (!title || !body || !category) {
-    res.status(400).json({ error: 'Missing required fields' });
-    return;
-  }
-  postsController.createPost(req, res);
-});
+router.post('/', authenticateToken, postsController.createPost);
 
 // Update a post (PROTECTED & AUTHORIZED - must be owner)
 router.put('/:id', authenticateToken, postsController.updatePost);

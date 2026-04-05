@@ -12,6 +12,9 @@ export interface RegisterRequest {
   password?: string;
   email?: string;
   role?: 'regular' | 'professional';
+  latitude?: number;
+  longitude?: number;
+  locationName?: string;
 }
 
 export interface TokenPayload {
@@ -26,6 +29,10 @@ export interface UserResponse {
   email: string;
   displayName: string | null;
   avatarUrl: string | null;
+  role?: 'regular' | 'professional';
+  latitude?: number | null;
+  longitude?: number | null;
+  locationName?: string | null;
   createdAt?: string;
 }
 

@@ -49,7 +49,7 @@ export const loginUser = async (req: Request, res: Response): Promise<void> => {
 
     // Fetch user from database
     const result = await pool.query(
-      'SELECT id, username, password_hash, email, display_name, avatar_url, role FROM users WHERE username = $1 AND deleted_at IS NULL',
+      'SELECT id, username, password_hash, email, display_name, avatar_url, role, latitude, longitude, location_name FROM users WHERE username = $1 AND deleted_at IS NULL',
       [username.trim()]
     );
     const user = result.rows[0];
@@ -90,6 +90,9 @@ export const loginUser = async (req: Request, res: Response): Promise<void> => {
         displayName: user.display_name,
         avatarUrl: user.avatar_url,
         role: user.role,
+        latitude: user.latitude,
+        longitude: user.longitude,
+        locationName: user.location_name,
       },
     });
   } catch (err) {
@@ -104,7 +107,7 @@ export const loginUser = async (req: Request, res: Response): Promise<void> => {
  */
 export const registerUser = async (req: Request, res: Response): Promise<void> => {
   try {
-    const { username, password, email, role } = req.body as RegisterRequest;
+    const { username, password, email, role, latitude, longitude, locationName } = req.body as RegisterRequest;
 
     // Validation
     if (!username || !password || !email) {
@@ -149,10 +152,10 @@ export const registerUser = async (req: Request, res: Response): Promise<void> =
     // Hash the password
     const passwordHash = await bcrypt.hash(password, 10);
 
-    // Insert new user into database
+    // Insert new user into database with geolocation
     const newUserResult = await pool.query(
-      'INSERT INTO users (username, password_hash, email, display_name, role) VALUES ($1, $2, $3, $4, $5) RETURNING id, username, email, display_name, role',
-      [trimmedUsername, passwordHash, trimmedEmail, trimmedUsername, userRole]
+      'INSERT INTO users (username, password_hash, email, display_name, role, latitude, longitude, location_name) VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING id, username, email, display_name, role, latitude, longitude, location_name',
+      [trimmedUsername, passwordHash, trimmedEmail, trimmedUsername, userRole, latitude || null, longitude || null, locationName || null]
     );
 
     const newUser = newUserResult.rows[0];
@@ -179,6 +182,9 @@ export const registerUser = async (req: Request, res: Response): Promise<void> =
         email: newUser.email,
         displayName: newUser.display_name,
         role: newUser.role,
+        latitude: newUser.latitude,
+        longitude: newUser.longitude,
+        locationName: newUser.location_name,
       },
     });
   } catch (err) {
@@ -200,7 +206,7 @@ export const getCurrentUser = async (req: Request, res: Response): Promise<void>
     }
 
     const result = await pool.query(
-      'SELECT id, username, email, display_name, avatar_url, role, created_at FROM users WHERE id = $1 AND deleted_at IS NULL',
+      'SELECT id, username, email, display_name, avatar_url, role, latitude, longitude, location_name, created_at FROM users WHERE id = $1 AND deleted_at IS NULL',
       [userId]
     );
 
@@ -218,6 +224,9 @@ export const getCurrentUser = async (req: Request, res: Response): Promise<void>
         displayName: user.display_name,
         avatarUrl: user.avatar_url,
         role: user.role,
+        latitude: user.latitude,
+        longitude: user.longitude,
+        locationName: user.location_name,
         createdAt: user.created_at,
       },
     });
@@ -233,7 +242,7 @@ export const getCurrentUser = async (req: Request, res: Response): Promise<void>
 export const updateUser = async (req: Request, res: Response): Promise<void> => {
   try {
     const userId = req.user?.id;
-    const { displayName, avatarUrl } = req.body;
+    const { displayName, avatarUrl, latitude, longitude, locationName } = req.body;
 
     if (!userId) {
       res.status(401).json({ error: 'Not authenticated' });
@@ -246,10 +255,10 @@ export const updateUser = async (req: Request, res: Response): Promise<void> => 
       return;
     }
 
-    // Update user
+    // Update user with geolocation support
     const result = await pool.query(
-      'UPDATE users SET display_name = COALESCE($1, display_name), avatar_url = COALESCE($2, avatar_url), updated_at = CURRENT_TIMESTAMP WHERE id = $3 AND deleted_at IS NULL RETURNING id, username, email, display_name, avatar_url, role',
-      [displayName || null, avatarUrl || null, userId]
+      'UPDATE users SET display_name = COALESCE($1, display_name), avatar_url = COALESCE($2, avatar_url), latitude = COALESCE($3, latitude), longitude = COALESCE($4, longitude), location_name = COALESCE($5, location_name), updated_at = CURRENT_TIMESTAMP WHERE id = $6 AND deleted_at IS NULL RETURNING id, username, email, display_name, avatar_url, role, latitude, longitude, location_name',
+      [displayName || null, avatarUrl || null, latitude || null, longitude || null, locationName || null, userId]
     );
 
     if (result.rows.length === 0) {
@@ -267,6 +276,9 @@ export const updateUser = async (req: Request, res: Response): Promise<void> => 
         displayName: user.display_name,
         avatarUrl: user.avatar_url,
         role: user.role,
+        latitude: user.latitude,
+        longitude: user.longitude,
+        locationName: user.location_name,
       },
     });
   } catch (err) {

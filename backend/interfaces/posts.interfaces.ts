@@ -8,6 +8,9 @@ export interface CreatePostRequest {
   category?: 'Education' | 'Healthcare' | 'New Tech';
   type?: 'post' | 'article';
   imageUrl?: string;
+  latitude?: number;
+  longitude?: number;
+  locationName?: string;
 }
 
 export interface UpdatePostRequest {
@@ -15,6 +18,9 @@ export interface UpdatePostRequest {
   body?: string;
   category?: string;
   imageUrl?: string;
+  latitude?: number;
+  longitude?: number;
+  locationName?: string;
 }
 
 export interface PostResponse {
@@ -25,6 +31,9 @@ export interface PostResponse {
   category: 'Education' | 'Healthcare' | 'New Tech';
   type: 'post' | 'article';
   imageUrl: string | null;
+  latitude: number | null;
+  longitude: number | null;
+  locationName: string | null;
   createdAt: string;
   updatedAt: string;
 }

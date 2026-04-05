@@ -13,3 +13,9 @@ export * from './express.interfaces.ts';
 
 // Post Interfaces
 export * from './posts.interfaces.ts';
+
+// Fact-Check Interfaces
+export * from './factcheck.interfaces.ts';
+
+// Translation Interfaces
+export * from './translation.interfaces.ts';

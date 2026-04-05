@@ -35,7 +35,7 @@ const getAllPosts = async (req: Request, res: Response) => {
 // Protected - requires auth token
 const createPost = async (req: Request, res: Response) => {
     try {
-        const { title, body, category, type, imageUrl } = req.body as CreatePostRequest;
+        const { title, body, category, type, imageUrl, latitude, longitude, locationName } = req.body as CreatePostRequest;
         const userId = req.user!.id;
         const userRole = req.user!.role;
 
@@ -43,10 +43,10 @@ const createPost = async (req: Request, res: Response) => {
         const postType = type === 'article' && userRole === 'professional' ? 'article' : 'post';
 
         const result = await pool.query(
-            `INSERT INTO posts (user_id, title, body, category, type, image_url)
-             VALUES ($1, $2, $3, $4, $5, $6)
+            `INSERT INTO posts (user_id, title, body, category, type, image_url, latitude, longitude, location_name)
+             VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
              RETURNING *`,
-            [userId, title, body, category, postType, imageUrl ?? null]
+            [userId, title, body, category, postType, imageUrl ?? null, latitude ?? null, longitude ?? null, locationName ?? null]
         );
 
         res.status(201).json(result.rows[0]);
@@ -62,7 +62,7 @@ const updatePost = async (req: Request, res: Response) => {
     try {
         const postId = req.params.id;
         const userId = req.user!.id;
-        const { title, body, category } = req.body;
+        const { title, body, category, latitude, longitude, locationName } = req.body;
 
         const existing = await pool.query(
             'SELECT user_id FROM posts WHERE id = $1 AND deleted_at IS NULL',
@@ -84,10 +84,13 @@ const updatePost = async (req: Request, res: Response) => {
              SET title = COALESCE($1, title),
                  body = COALESCE($2, body),
                  category = COALESCE($3, category),
+                 latitude = COALESCE($5, latitude),
+                 longitude = COALESCE($6, longitude),
+                 location_name = COALESCE($7, location_name),
                  updated_at = NOW()
              WHERE id = $4
              RETURNING *`,
-            [title, body, category, postId]
+            [title, body, category, postId, latitude, longitude, locationName]
         );
 
         res.json(result.rows[0]);

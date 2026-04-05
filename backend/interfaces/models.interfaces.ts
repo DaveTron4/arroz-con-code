@@ -10,6 +10,9 @@ export interface UserModel {
   display_name: string | null;
   avatar_url: string | null;
   role: 'regular' | 'professional';
+  latitude: number | null;
+  longitude: number | null;
+  location_name: string | null;
   created_at: string;
   updated_at: string;
   deleted_at: string | null;
@@ -23,6 +26,9 @@ export interface PostModel {
   category: 'Education' | 'Healthcare' | 'New Tech';
   type: 'post' | 'article';
   image_url: string | null;
+  latitude: number | null;
+  longitude: number | null;
+  location_name: string | null;
   created_at: string;
   updated_at: string;
   deleted_at: string | null;
@@ -93,4 +99,24 @@ export interface ResourceModel {
   priority: number;
   created_at: string;
   updated_at: string;
+}
+
+export interface TranslationModel {
+  id: number;
+  post_id: number;
+  original_language: 'en' | 'es';
+  original_text: string;
+  translated_language: 'en' | 'es';
+  translated_text: string;
+  created_at: string;
+}
+
+export interface LocationSearchModel {
+  id: number;
+  user_id: number | null;
+  query: string;
+  latitude: number;
+  longitude: number;
+  results: any; // JSONB results from OpenStreetMap
+  created_at: string;
 }
