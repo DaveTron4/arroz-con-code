@@ -1,14 +1,12 @@
 import { createBrowserRouter } from "react-router";
 import RootLayout from "./layouts/RootLayout";
 import ProtectedRoute from "./components/ProtectedRoute";
-import ProfessionalRoute from "./components/ProfessionalRoute";
 import FeedPage from "./pages/FeedPage";
 import SignUpPage from "./pages/SignUpPage";
 import SignInPage from "./pages/SignInPage";
 import PostDetailPage from "./pages/PostDetailPage";
 import CreatePostPage from "./pages/CreatePostPage";
 import ArticleDetailPage from "./pages/ArticleDetailPage";
-import CreateArticlePage from "./pages/CreateArticlePage";
 import CommunityBoardPage from "./pages/CommunityBoardPage";
 import ProfilePage from "./pages/ProfilePage";
 import SettingsPage from "./pages/SettingsPage";
@@ -32,14 +30,6 @@ export const router = createBrowserRouter([
         ),
       },
       { path: "/article/:id", element: <ArticleDetailPage /> },
-      {
-        path: "/article/new",
-        element: (
-          <ProfessionalRoute>
-            <CreateArticlePage />
-          </ProfessionalRoute>
-        ),
-      },
       { path: "/profile/:id", element: <ProfilePage /> },
       {
         path: "/settings",
