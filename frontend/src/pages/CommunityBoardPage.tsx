@@ -13,9 +13,6 @@ export default function CommunityBoardPage() {
     activeCategory !== "All" ? { category: activeCategory } : undefined
   );
 
-  useEffect(() => {
-    refetch();
-  }, [activeCategory, refetch]);
 
   return (
     <section className="mx-auto max-w-3xl px-4 py-6">

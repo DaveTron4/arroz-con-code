@@ -1,7 +1,6 @@
 import { NavLink, useNavigate } from "react-router";
 import { useAuth } from "../context/AuthContext";
 
-const CATEGORIES = ["Education", "Healthcare", "Technology"] as const;
 
 export default function Sidebar() {
   const { isAuthenticated, logout } = useAuth();
@@ -82,22 +81,6 @@ export default function Sidebar() {
         </div>
       )}
 
-      {/* Category filters */}
-      <div className="border-t border-gray-100 px-3 py-4">
-        <p className="mb-2 px-3 text-xs font-semibold uppercase tracking-wider text-gray-400">
-          Categories
-        </p>
-        <div className="flex flex-col gap-1">
-          {CATEGORIES.map((cat) => (
-            <button
-              key={cat}
-              className="rounded-lg px-3 py-2 text-left text-sm text-gray-600 hover:bg-gray-100 hover:text-gray-900"
-            >
-              {cat}
-            </button>
-          ))}
-        </div>
-      </div>
     </aside>
   );
 }
