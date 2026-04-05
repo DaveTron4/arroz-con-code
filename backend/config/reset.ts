@@ -309,6 +309,28 @@ const resetDatabase = async () => {
 
     console.log('✅ Seeded comments');
 
+    // Seed Fact-Checks
+    await client.query(`
+      INSERT INTO fact_checks (post_id, original_text, is_fact_checked, fact_check_status, fact_check_result, confidence_score, checked_at)
+      VALUES
+        ($1,  'How to prepare for college entrance exams?', true, 'verified', 'College entrance exam preparation through established resources like Khan Academy is a verified effective approach recommended by education professionals.', 0.92, NOW()),
+        ($2,  '¿Becas disponibles para estudiantes hispanos?', true, 'verified', 'Google y Microsoft ofrecen becas específicas para estudiantes latinos. Esta información es verificable a través de sus sitios web oficiales.', 0.88, NOW()),
+        ($3,  'College Prep Guide: A Professional''s Roadmap', true, 'verified', 'Comprehensive college preparation guides from education professionals are reliable and evidence-based resources.', 0.90, NOW()),
+        ($4,  'How to find affordable healthcare in my city?', true, 'verified', 'Local health departments and community clinics provide free or low-cost healthcare. This is factually accurate.', 0.85, NOW()),
+        ($5,  'Síntomas comunes del COVID-19', true, 'verified', 'Los síntomas descritos del COVID-19 como fiebre alta y dificultad respiratoria son síntomas confirmados. La recomendación de buscar ayuda médica es apropiada.', 0.89, NOW()),
+        ($6,  'Healthcare Access in Hispanic Communities', true, 'verified', 'The challenges of healthcare access in Hispanic communities are well-documented and this article addresses real issues.', 0.87, NOW()),
+        ($7,  'Getting started with coding - where to begin?', true, 'verified', 'Python is widely recognized as beginner-friendly and in-demand in the job market. This recommendation is accurate.', 0.91, NOW()),
+        ($8,  'Recursos gratis para aprender programación', true, 'verified', 'freeCodeCamp ofrece cursos gratuitos en español. Esta información es verificable y exacta.', 0.93, NOW()),
+        ($9,  'Career Pathways in AI: A Professional Guide', true, 'verified', 'Career trajectories in AI and the importance of skills development are accurately portrayed in professional resources.', 0.86, NOW())
+      RETURNING id;
+    `, [
+      allPostIds[0], allPostIds[1], allPostIds[2],
+      allPostIds[3], allPostIds[4], allPostIds[5],
+      allPostIds[6], allPostIds[7], allPostIds[8]
+    ]);
+
+    console.log('✅ Seeded fact-checks');
+
     // Seed Resources
     await client.query(`
       INSERT INTO resources (category, title, url, description, language, priority)
