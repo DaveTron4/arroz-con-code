@@ -1,8 +1,10 @@
+import { useState } from "react";
 import { Outlet, useLocation, useMatch } from "react-router";
 import TopToolbar from "../components/TopToolbar";
 import BottomNav from "../components/BottomNav";
 import Sidebar from "../components/Sidebar";
 import FAB from "../components/FAB";
+import AISearchModal from "../components/AISearchModal";
 
 const FAB_ROUTES = ["/", "/post/", "/article/"];
 
@@ -19,15 +21,16 @@ function useShouldShowFAB() {
 
 export default function RootLayout() {
   const showFAB = useShouldShowFAB();
+  const [searchOpen, setSearchOpen] = useState(false);
 
   return (
     <div className="min-h-screen bg-white">
       {/* Mobile: top toolbar (sticky) */}
-      <TopToolbar />
+      <TopToolbar onOpenSearch={() => setSearchOpen(true)} />
 
       <div className="flex">
         {/* Tablet+: left sidebar */}
-        <Sidebar />
+        <Sidebar onOpenSearch={() => setSearchOpen(true)} />
 
         {/* Main content — pb-16 reserves space for mobile bottom nav */}
         <main className="flex-1 pb-16 md:pb-0">
@@ -39,7 +42,10 @@ export default function RootLayout() {
       {showFAB && <FAB />}
 
       {/* Mobile: bottom sticky nav */}
-      <BottomNav />
+      <BottomNav onOpenSearch={() => setSearchOpen(true)} />
+
+      {/* AI Search Modal */}
+      <AISearchModal isOpen={searchOpen} onClose={() => setSearchOpen(false)} />
     </div>
   );
 }

@@ -95,6 +95,7 @@ export type TranslationKey =
   | "createAccount"
   | "creatingAccount"
   | "aiChat"
+  | "aiSearch"
   | "newPost"
   | "post"
   | "goBack"
@@ -194,6 +195,7 @@ const translations: Record<Language, Record<TranslationKey, string>> = {
     createAccount: "Create an account",
     creatingAccount: "Creating account...",
     aiChat: "AI Chat",
+    aiSearch: "AI Search",
     newPost: "New Post",
     post: "Post",
     goBack: "Go back",
@@ -289,6 +291,7 @@ const translations: Record<Language, Record<TranslationKey, string>> = {
     publishing: "Publicando...",
     locationDenied: "Acceso a ubicación denegado.",
     aiChat: "Chat IA",
+    aiSearch: "Búsqueda IA",
     newPost: "Nueva Publicación",
     post: "Publicación",
     goBack: "Volver atrás",

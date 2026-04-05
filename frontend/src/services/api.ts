@@ -399,6 +399,28 @@ export const locationsAPI = {
     return apiCall<Array<any>>(`/locations/search${queryStr}`);
   },
 
+  aiSearch: (data: {
+    query: string;
+    latitude?: number;
+    longitude?: number;
+  }) =>
+    apiCall<{
+      query: string;
+      keywords: string[];
+      results: Array<{
+        place_id: string;
+        display_name: string;
+        lat: string;
+        lon: string;
+        address: Record<string, string>;
+        type: string;
+        category: string;
+      }>;
+    }>('/locations/ai-search', {
+      method: 'POST',
+      body: JSON.stringify(data),
+    }),
+
   getSearchHistory: () =>
     apiCall<
       Array<{

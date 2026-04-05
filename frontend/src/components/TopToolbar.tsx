@@ -1,13 +1,32 @@
 import { Link } from "react-router";
 
-export default function TopToolbar() {
+interface Props {
+  onOpenSearch: () => void;
+}
+
+export default function TopToolbar({ onOpenSearch }: Props) {
   return (
     <header className="sticky top-0 z-50 flex items-center gap-3 border-b border-gray-200 bg-white px-4 py-3 md:hidden">
-      <input
-        type="search"
-        placeholder="Search..."
-        className="flex-1 rounded-full border border-gray-200 bg-gray-50 px-4 py-2 text-sm text-gray-700 outline-none focus:border-indigo-400 focus:ring-1 focus:ring-indigo-400"
-      />
+      <button
+        type="button"
+        onClick={onOpenSearch}
+        className="flex flex-1 items-center gap-2 rounded-full border border-gray-200 bg-gray-50 px-4 py-2 text-sm text-gray-400 text-left"
+      >
+        <svg
+          width="14"
+          height="14"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        >
+          <circle cx="11" cy="11" r="8" />
+          <line x1="21" y1="21" x2="16.65" y2="16.65" />
+        </svg>
+        Search…
+      </button>
       <Link to="/settings" aria-label="Settings">
         <div className="flex h-8 w-8 items-center justify-center rounded-full bg-gray-100 text-gray-600">
           <svg
