@@ -44,7 +44,26 @@ const getAllPosts = async (req: Request, res: Response) => {
             `);
         }
 
-        let query = 'SELECT * FROM posts_with_stats';
+        let query = `
+            SELECT
+                id,
+                user_id AS "userId",
+                username AS "authorUsername",
+                display_name AS "authorDisplayName",
+                avatar_url AS "authorAvatarUrl",
+                role AS "authorRole",
+                title,
+                body,
+                category,
+                type,
+                image_url AS "imageUrl",
+                latitude,
+                longitude,
+                location_name AS "locationName",
+                created_at AS "createdAt",
+                like_count AS "likeCount",
+                comment_count AS "commentCount"
+            FROM posts_with_stats`;
         if (conditions.length > 0) {
             query += ' WHERE ' + conditions.join(' AND ');
         }
@@ -67,7 +86,25 @@ const getPostById = async (req: Request, res: Response) => {
         const { id } = req.params;
 
         const result = await pool.query(
-            'SELECT * FROM posts_with_stats WHERE id = $1',
+            `SELECT
+                id,
+                user_id AS "userId",
+                username AS "authorUsername",
+                display_name AS "authorDisplayName",
+                avatar_url AS "authorAvatarUrl",
+                role AS "authorRole",
+                title,
+                body,
+                category,
+                type,
+                image_url AS "imageUrl",
+                latitude,
+                longitude,
+                location_name AS "locationName",
+                created_at AS "createdAt",
+                like_count AS "likeCount",
+                comment_count AS "commentCount"
+             FROM posts_with_stats WHERE id = $1`,
             [id]
         );
 
@@ -111,7 +148,19 @@ const createPost = async (req: Request, res: Response) => {
         const result = await pool.query(
             `INSERT INTO posts (user_id, title, body, category, type, image_url, latitude, longitude, location_name)
              VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
-             RETURNING *`,
+             RETURNING
+                id,
+                user_id AS "userId",
+                title,
+                body,
+                category,
+                type,
+                image_url AS "imageUrl",
+                latitude,
+                longitude,
+                location_name AS "locationName",
+                created_at AS "createdAt",
+                updated_at AS "updatedAt"`,
             [userId, title, body, category, postType, imageUrl ?? null, latitude ?? null, longitude ?? null, locationName ?? null]
         );
 
@@ -155,7 +204,19 @@ const updatePost = async (req: Request, res: Response) => {
                  location_name = COALESCE($7, location_name),
                  updated_at = NOW()
              WHERE id = $4
-             RETURNING *`,
+             RETURNING
+                id,
+                user_id AS "userId",
+                title,
+                body,
+                category,
+                type,
+                image_url AS "imageUrl",
+                latitude,
+                longitude,
+                location_name AS "locationName",
+                created_at AS "createdAt",
+                updated_at AS "updatedAt"`,
             [title, body, category, postId, latitude, longitude, locationName]
         );
 
