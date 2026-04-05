@@ -2,9 +2,11 @@
 
 ## Overview
 
-The frontend is a single-page application (SPA) built with React, React Router, and Tailwind CSS. It lives in the `frontend/` folder at the root of the repo.
+The frontend is a single-page application (SPA) built with React, React Router, and Tailwind CSS v4. It lives in the `frontend/` folder at the root of the repo.
 
 All routing happens client-side. The server only serves one HTML file — React takes over from there and handles which page to show based on the URL.
+
+The layout is **mobile-first**: on small screens the app has a top toolbar and a bottom sticky nav bar (Reddit/forum style). On tablet and above it switches to a left sidebar layout.
 
 ---
 
@@ -24,7 +26,7 @@ frontend/
     ├── index.css           # Global styles (Tailwind import)
     ├── router.tsx          # All routes defined in one place
     ├── context/            # Global state shared across the app
-    ├── layouts/            # Page wrappers (navbar + content area)
+    ├── layouts/            # Page wrappers (top toolbar, bottom nav, sidebar)
     ├── components/         # Reusable UI pieces
     └── pages/              # One file per screen/route
 ```
@@ -38,13 +40,13 @@ When the browser loads the app, this is the order of execution:
 ```
 index.html
   └── src/main.tsx
-        ├── Wraps everything in <AuthProvider>   (makes auth state available app-wide)
-        └── Renders <RouterProvider>             (hands control to the router)
-              └── router.tsx                     (decides which page to show)
-                    └── RootLayout               (renders Navbar + current page)
+        ├── Wraps everything in <AuthProvider>       (makes auth state available app-wide)
+        └── Renders <RouterProvider>                 (hands control to the router)
+              └── router.tsx                         (decides which page to show)
+                    └── RootLayout                   (renders nav + current page)
 ```
 
-Every page lives inside `RootLayout`, which means the navbar is always present.
+Every page lives inside `RootLayout`, which handles the responsive shell.
 
 ---
 
@@ -52,22 +54,23 @@ Every page lives inside `RootLayout`, which means the navbar is always present.
 
 All routes are defined in a single file using React Router's `createBrowserRouter`.
 
-| Route | Page Component | Auth Required |
-|-------|---------------|---------------|
-| `/` | `LandingPage` | No |
-| `/signup` | `SignUpPage` | No |
-| `/signin` | `SignInPage` | No |
-| `/chat` | `ChatPage` | No |
-| `/community` | `CommunityBoardPage` | No |
-| `/community/new` | `CreatePostPage` | Yes |
-| `/community/:id` | `PostDetailPage` | No (read) / Yes (comment) |
-| `/settings` | `SettingsPage` | Yes |
+| Route          | Page Component      | Auth Required                    |
+| -------------- | ------------------- | -------------------------------- |
+| `/`            | `FeedPage`          | No                               |
+| `/signup`      | `SignUpPage`        | No                               |
+| `/signin`      | `SignInPage`        | No                               |
+| `/post/:id`    | `PostDetailPage`    | No (read) / Yes (comment)        |
+| `/post/new`    | `CreatePostPage`    | Yes                              |
+| `/article/:id` | `ArticleDetailPage` | No                               |
+| `/article/new` | `CreateArticlePage` | Yes (verified professional only) |
+| `/profile/:id` | `ProfilePage`       | No                               |
+| `/settings`    | `SettingsPage`      | Yes                              |
 
 Routes that require login are wrapped in `<ProtectedRoute>` directly in `router.tsx`:
 
 ```tsx
 {
-  path: "/community/new",
+  path: "/post/new",
   element: (
     <ProtectedRoute>
       <CreatePostPage />
@@ -76,87 +79,151 @@ Routes that require login are wrapped in `<ProtectedRoute>` directly in `router.
 }
 ```
 
-> Note: `/community/new` is defined before `/community/:id` so the static segment "new"
-> is never mistakenly captured as a post ID.
+For professional-only routes, use `<ProfessionalRoute>` which checks both `isAuthenticated` and `user.isVerified`.
+
+> Note: `/post/new` is defined before `/post/:id` so the static segment "new" is never
+> mistakenly captured as a post ID. Same for `/article/new` vs `/article/:id`.
 
 ---
 
 ## Layouts (`src/layouts/`)
 
 ### `RootLayout.tsx`
-The single layout that wraps every page. It renders the `Navbar` at the top and an `<Outlet />` below it. The `<Outlet />` is where React Router injects the current page component.
+
+The single layout that wraps every page. It renders the appropriate navigation shell based on screen size, then an `<Outlet />` where the active page renders.
+
+**Mobile (< 768px):**
 
 ```
-┌─────────────────────────────┐
-│         Navbar              │
-├─────────────────────────────┤
-│                             │
-│    <Outlet /> (active page) │
-│                             │
-└─────────────────────────────┘
+┌────────────────────────┐
+│  [Search]   [Profile]  │  ← TopToolbar
+├────────────────────────┤
+│                        │
+│    <Outlet />          │
+│                        │
+├────────────────────────┤
+│     Feed    Profile    │  ← BottomNav (sticky)
+└────────────────────────┘
+```
+
+**Tablet (≥ 768px):**
+
+```
+┌──────────┬─────────────┐
+│          │             │
+│ Sidebar  │  <Outlet /> │
+│ (nav +   │             │
+│ filters) │             │
+└──────────┴─────────────┘
+```
+
+Use Tailwind's responsive prefix to switch layouts:
+
+```tsx
+<div className="md:hidden">   {/* mobile only */}
+<div className="hidden md:flex">  {/* tablet and up */}
 ```
 
 ---
 
 ## Components (`src/components/`)
 
-### `Navbar.tsx`
-The sticky top navigation bar. It reads from `AuthContext` to show different links depending on whether the user is logged in.
+### `TopToolbar.tsx`
 
-- **Logged out:** shows Sign In and Sign Up links
-- **Logged in:** shows Settings and Sign Out button
+Visible only on mobile. Contains a search input and a profile icon link. Sticks to the top.
+
+### `BottomNav.tsx`
+
+Visible only on mobile. Sticky bottom navigation with icons + labels for: Feed, Profile.
+
+### `Sidebar.tsx`
+
+Visible on tablet and above. Contains navigation links and category filter buttons.
+
+### `PostCard.tsx`
+
+Reusable card for displaying a post in the feed. Shows title, category badge, author, and timestamp. Includes a translate button.
+
+### `ArticleCard.tsx`
+
+Same as `PostCard` but also shows the professional author badge.
+
+### `TranslateButton.tsx`
+
+Button that triggers a translation request for a single post or article. Shows a loading state while the request is in flight and replaces the content with the translated version on success.
+
+### `ProfessionalBadge.tsx`
+
+Small visual badge shown on article cards and professional profiles when `is_verified` is true.
 
 ### `ProtectedRoute.tsx`
-A wrapper component that checks if the user is authenticated before rendering a page. If they are not logged in, it redirects them to `/signin` and remembers where they were trying to go, so they can be returned there after signing in.
 
-```tsx
-// Usage in router.tsx
-<ProtectedRoute>
-  <SettingsPage />
-</ProtectedRoute>
-```
+Checks `isAuthenticated` before rendering a page. Redirects to `/signin` and stores the intended destination for return after login.
+
+### `ProfessionalRoute.tsx`
+
+Extends `ProtectedRoute`. Also checks `user.isVerified`. If the user is not a verified professional, shows a message explaining they need verification rather than redirecting.
 
 ---
 
 ## Context (`src/context/`)
 
 ### `AuthContext.tsx`
+
 Provides authentication state to the entire app. Any component can call `useAuth()` to read or update auth state.
 
 **What it exposes:**
 
-| Name | Type | Description |
-|------|------|-------------|
-| `isAuthenticated` | `boolean` | Whether the user is currently logged in |
-| `login(token)` | `function` | Call this after a successful sign-in to store the token and update state |
-| `logout()` | `function` | Clears the token and marks the user as logged out |
+| Name              | Type       | Description                                                         |
+| ----------------- | ---------- | ------------------------------------------------------------------- |
+| `isAuthenticated` | `boolean`  | Whether the user is currently logged in                             |
+| `user`            | `User`     | Current user object (`id`, `displayName`, `type`, `isVerified`)     |
+| `login(token)`    | `function` | Call after a successful sign-in to store the token and update state |
+| `logout()`        | `function` | Clears the token and marks the user as logged out                   |
 
 Auth state is persisted in `localStorage` so the user stays logged in across page refreshes.
 
-**How to use it in any component:**
+**How to use it:**
 
 ```tsx
 import { useAuth } from "../context/AuthContext";
 
-const { isAuthenticated, login, logout } = useAuth();
+const { isAuthenticated, user, login, logout } = useAuth();
 ```
 
 ---
 
 ## Pages (`src/pages/`)
 
-Each file maps 1:1 to a route. Pages are responsible for their own layout content — they render inside `RootLayout`'s `<Outlet />`.
+| File                    | Route          | What it does                                                                      |
+| ----------------------- | -------------- | --------------------------------------------------------------------------------- |
+| `FeedPage.tsx`          | `/`            | Geolocated feed of posts and articles; requests location on load; category filter |
+| `SignUpPage.tsx`        | `/signup`      | Registration form with account type selector (Community / Professional)           |
+| `SignInPage.tsx`        | `/signin`      | Login form; reads redirect state from `ProtectedRoute`                            |
+| `PostDetailPage.tsx`    | `/post/:id`    | Full post, comments, comment input, translate button                              |
+| `CreatePostPage.tsx`    | `/post/new`    | Form: title, body, category — protected                                           |
+| `ArticleDetailPage.tsx` | `/article/:id` | Full article, professional author info, translate button                          |
+| `CreateArticlePage.tsx` | `/article/new` | Form: title, body, category — professional-protected                              |
+| `ProfilePage.tsx`       | `/profile/:id` | Public profile: display name, bio, account type, post/article history             |
+| `SettingsPage.tsx`      | `/settings`    | Edit display name, bio, email, password, avatar — protected                       |
 
-| File | Route | What it does |
-|------|-------|-------------|
-| `LandingPage.tsx` | `/` | Hero section with two CTAs linking to Chat and Community |
-| `SignUpPage.tsx` | `/signup` | Email + password registration form |
-| `SignInPage.tsx` | `/signin` | Email + password login form; reads redirect state from `ProtectedRoute` |
-| `ChatPage.tsx` | `/chat` | Message thread UI, input box, send button — open to all users |
-| `CommunityBoardPage.tsx` | `/community` | Post list with category filter tabs and "New Post" button |
-| `PostDetailPage.tsx` | `/community/:id` | Full post with comments; comment input is disabled until logged in |
-| `CreatePostPage.tsx` | `/community/new` | Form to write and publish a new post (protected) |
-| `SettingsPage.tsx` | `/settings` | Display name, email, password, and language preference (protected) |
+---
+
+## Geolocation
+
+On `FeedPage`, request the user's location on mount:
+
+```tsx
+useEffect(() => {
+  navigator.geolocation.getCurrentPosition(
+    (pos) =>
+      setLocation({ lat: pos.coords.latitude, lng: pos.coords.longitude }),
+    () => setShowLocationFallback(true), // show city/zip input
+  );
+}, []);
+```
+
+Pass `lat`/`lng` (or the fallback city/zip) as query params to the feed API endpoint.
 
 ---
 
@@ -169,7 +236,7 @@ Tailwind CSS v4 is used for all styling. There is no `tailwind.config.js` — v4
 @import "tailwindcss";
 ```
 
-The Vite plugin (`@tailwindcss/vite`) scans all source files automatically and generates only the styles that are used. Tailwind utility classes are applied directly on elements in each component.
+The Vite plugin (`@tailwindcss/vite`) scans all source files automatically and generates only the styles that are used.
 
 ---
 
@@ -188,6 +255,10 @@ All environment variables exposed to the browser must be prefixed with `VITE_`. 
 ## Running Locally
 
 ```bash
+# From repo root
+npm run frontend
+
+# Or from the frontend directory
 cd frontend
 npm install
 npm run dev

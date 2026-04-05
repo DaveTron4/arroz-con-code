@@ -1,7 +1,6 @@
-# Arroz con Code — Project Plan
+# COMUNIDAD — Project Plan
 
-> Web app helping Hispanic communities access education, healthcare, and new tech
-> through an AI Chat and a Community Board.
+> Geolocation-based community platform for Hispanic communities.
 > **Total time: 12 hours | 4 developers**
 
 ---
@@ -11,37 +10,41 @@
 ### Must-Have (MVP — demo must show these)
 
 - [ ] Bilingual UI — Spanish / English toggle
-- [ ] User auth: sign up and sign in with email
-- [ ] AI Chat: ask a question, get a bilingual response (Education, Healthcare, New Tech)
-- [ ] Community Board: create a post, pick a category, others can comment
-- [ ] Basic responsive layout (works on mobile)
+- [ ] User auth: sign up and sign in with email; community and professional account types
+- [ ] Geolocation feed: posts and articles within ~20–30 miles
+- [ ] Posts: community members ask questions by category (Education, Healthcare, Technology)
+- [ ] Articles: verified professionals publish informational posts
+- [ ] Per-post translation: user-triggered, one item at a time
+- [ ] AI-assisted suggestions: professionals see relevant community posts to reply to
+- [ ] User profiles: display name, bio, account type, post history
+- [ ] Mobile-first responsive layout: bottom sticky nav + top toolbar on mobile; left sidebar on tablet
 
 ### Should-Have (if time allows)
 
-- [ ] Upvote posts and comments
-- [ ] Filter community board by category
-- [ ] AI chat history saved per session
-- [ ] Profile page with display name and avatar
+- [ ] Upvote posts and articles
+- [ ] Search nearby professionals by category
+- [ ] Filter feed by category on a dedicated tab
 
 ### Won't-Do (cut for 12 hours)
 
-- ~~Social OAuth (Google, etc.)~~ — email-only auth is enough to demo
-- ~~Moderator dashboard~~ — no time
-- ~~Auto-moderation / profanity filter~~ — out of scope
-- ~~Email notifications / follow post~~ — out of scope
-- ~~Search~~ — category filter covers demo needs
-- ~~PWA / offline mode~~ — post-hackathon stretch goal
+- ~~Social OAuth (Google, etc.)~~
+- ~~Moderator dashboard~~
+- ~~Auto-moderation / profanity filter~~
+- ~~Email notifications~~
+- ~~Full-text search~~
+- ~~PWA / offline mode~~
+- ~~Automated professional credential verification~~
 
 ---
 
 ## Developer Roles
 
-| Dev | Role               | Owns                                                       |
-| --- | ------------------ | ---------------------------------------------------------- |
-| D1  | Frontend / UI Lead | Layout, all pages, i18n strings, responsive polish         |
-| D2  | Backend / API Lead | Database schema, auth, API routes, data queries            |
-| D3  | AI Integration     | AI chat API route, chat UI, system prompt, streaming       |
-| D4  | Community Features | Community board UI + API, posts, comments, category filter |
+| Dev | Role               | Owns                                                                          |
+| --- | ------------------ | ----------------------------------------------------------------------------- |
+| D1  | Frontend / UI Lead | Mobile-first layout, all pages, bottom nav, tablet sidebar, i18n strings      |
+| D2  | Backend / API Lead | Database schema, auth (regular + professional), geolocation queries, API routes |
+| D3  | AI + Translation   | Translation API integration, AI recommendation engine for professionals       |
+| D4  | Community Features | Posts, articles, comments, professional replies, user profiles                |
 
 ---
 
@@ -52,10 +55,10 @@
 **Goal:** Everyone has the app running locally and can push code.
 
 - [ ] **All** — Agree on Git workflow: `main` is always deployable, feature branches per dev
-- [ ] **D1** — Scaffold frontend project, set up component library, set up i18n (ES/EN stubs)
-- [ ] **D2** — Set up database, define schema (users, posts, comments, chat feedback), share environment config with team
-- [ ] **D3** — Get AI API key, create chat endpoint stub, confirm it returns a response
-- [ ] **D4** — Confirm posts/comments tables are live, test a manual insert
+- [ ] **D1** — Scaffold frontend with mobile-first shell, bottom nav stub, i18n stubs (EN/ES)
+- [ ] **D2** — Set up database, define schema (users, posts, articles, comments, geolocation), share env config
+- [ ] **D3** — Get translation API key, get AI API key, test both return responses
+- [ ] **D4** — Confirm posts/articles tables exist, test a manual insert
 - [ ] **All** — Deploy skeleton to hosting platform, confirm preview URL works
 
 ---
@@ -64,86 +67,99 @@
 
 #### D1 — Pages & Layout
 
-- [ ] App shell: navbar (logo, language toggle, login/signup link), main content area
-- [ ] Landing page: headline, 2 CTA buttons ("Ask AI" and "Join Community")
-- [ ] Auth pages: sign up / sign in forms
-- [ ] Chat page: message thread, input box, send button, loading state
-- [ ] Community board page: list of posts, category tabs, "New Post" button
+- [ ] Mobile shell: top toolbar (search + profile icon), bottom sticky nav (Home, Post, Articles, Profile)
+- [ ] Tablet shell: left sidebar with nav + category filters, main content area
+- [ ] Feed page: post and article cards with category badge and professional badge on articles
+- [ ] Post detail page: full post, comments, comment input, translate button
+- [ ] Article detail page: full article, professional author info, translate button
+- [ ] Auth pages: sign up (with account type selector) and sign in forms
+- [ ] Create post form: title, body, category selector
+- [ ] Profile page: display name, bio, account type badge, list of user's posts/articles
 
-#### D2 — Auth & API
+#### D2 — Auth & Geolocation API
 
-- [ ] Email sign up + sign in, session handling
-- [ ] Only create post and submit comment actions require login — viewing board, posts, and AI chat is open to all
-- [ ] List posts endpoint (with category filter), create post endpoint
-- [ ] Get comments for a post, add comment endpoint
-- [ ] Get and update current user profile endpoint
-- [ ] Users can only edit/delete their own content (authorization rules)
+- [ ] Email sign up + sign in, session handling (JWT)
+- [ ] Two user types stored in DB: `community` and `professional`; `is_verified` boolean on professional accounts
+- [ ] Geolocation endpoint: accepts lat/lng, returns posts + articles within radius (~20–30 miles)
+- [ ] Fallback: accept city/zip as location input if geolocation is not available
+- [ ] List posts endpoint (with category filter + geolocation filter)
+- [ ] List articles endpoint (with category filter + geolocation filter)
+- [ ] Create post, get post, list comments for post, add comment endpoints
+- [ ] Create article, get article endpoints
+- [ ] Get/update user profile endpoint
+- [ ] Seed database with 3–5 posts per category and 2–3 articles per category in Spanish and English
 
-#### D3 — AI Chat
+#### D3 — AI Recommendations + Translation
 
-- [ ] Write system prompt:
-  - Role: bilingual assistant for Hispanic communities
-  - Topics: education, healthcare, new tech only — decline off-topic questions politely
-  - Language: match the language of the user's message
-  - Tone: warm, clear, community-oriented
-- [ ] Chat endpoint: accept message + language preference, stream AI response
-- [ ] Connect chat UI to endpoint with streaming
-- [ ] Thumbs up/down button — save feedback to database
+- [ ] Translation endpoint: accept post/article ID + target language, return translated title + body
+  - Use a translation API (DeepL, Google Translate, or similar)
+  - Return error gracefully if API fails
+- [ ] AI recommendation endpoint: accept a professional's category/bio, return top 5 relevant community posts
+  - Use an AI call (prompt-based or embedding similarity)
+  - Only exposed to verified professional accounts
+- [ ] Test both endpoints return sensible results in Spanish and English
 
-#### D4 — Community Board
+#### D4 — Posts, Articles & Profiles
 
-- [ ] Fetch and display posts, grouped/filterable by category
-- [ ] Create post form: title, body, category (Education / Healthcare / New Tech)
-- [ ] Post detail page: show post + comments, comment input
-- [ ] Submit comment with optimistic UI update
+- [ ] Fetch and render posts in feed, filtered by geolocation + category
+- [ ] Fetch and render articles in feed, filtered by geolocation + category (with professional badge)
+- [ ] Post detail: full post, list comments, add comment (auth required), delete own comment
+- [ ] Article detail: full article, professional author name + verified badge
+- [ ] Create post form wired to API
+- [ ] Create article form wired to API (only accessible to verified professionals)
+- [ ] Public profile page: display name, bio, account type, post/article history
 
 ---
 
 ### Hours 5–9: Integration & Secondary Features
 
-- [ ] **D1 + D3** — Chat page fully works with real streaming AI responses
-- [ ] **D1 + D4** — Community board create/read/comment fully works end-to-end
-- [ ] **D2** — Add upvote endpoint if time allows; otherwise skip
-- [ ] **D3** — Inject curated resource links per topic into AI system prompt (5–10 links each)
-- [ ] **D4** — Category filter tabs wire up to actual API query
-- [ ] **D1** — Finish all i18n strings for every visible page (ES + EN)
+- [ ] **D1 + D2** — Feed fully loads geolocated posts and articles from real API
+- [ ] **D1 + D3** — Translate button works end-to-end on posts and articles
+- [ ] **D1 + D3** — "Suggested Posts" panel visible and working for verified professionals
+- [ ] **D1 + D4** — Create post and create article flows work end-to-end
+- [ ] **D1 + D4** — Comments work end-to-end on post detail
+- [ ] **D1** — Finish all i18n strings for every visible page (EN + ES)
+- [ ] **D2** — Verify auth guards: only verified professionals can create articles
 - [ ] **All** — Fix blockers from integration, merge feature branches to main
 
 ---
 
 ### Hours 9–11: Polish & QA
 
-- [ ] **D1** — Mobile responsive check: navbar, chat, community board all usable on small screens
-- [ ] **D1** — Loading states for feed and chat responses
-- [ ] **D2** — Verify all protected routes redirect unauthenticated users
-- [ ] **D3** — Test AI in Spanish and English, tune prompt if responses feel off
-- [ ] **D4** — End-to-end QA: sign up → create post → comment → switch language → ask AI
-- [ ] **All** — Seed database: 3–5 sample posts per category in Spanish and English
+- [ ] **D1** — Mobile QA: bottom nav, top toolbar, feed, post detail all usable on 375px
+- [ ] **D1** — Tablet QA: left sidebar shows, content area is usable on 768px+
+- [ ] **D1** — Loading states for feed and translation requests
+- [ ] **D2** — Verify geolocation fallback (city/zip input) works correctly
+- [ ] **D3** — Test translation in Spanish ↔ English on multiple posts
+- [ ] **D3** — Test AI suggestions return relevant results for a seeded professional account
+- [ ] **D4** — End-to-end QA: sign up → browse feed → open post → comment → translate → view profile
+- [ ] **All** — Final merge to main, confirm production deploy works
 
 ---
 
 ### Hours 11–12: Demo Prep
 
 - [ ] **All** — Final production deploy, confirm all environment variables are set
-- [ ] **D1** — Prepare demo flow (browser tab open, logged-in test account ready):
-  1. Land on homepage
+- [ ] **D1** — Prepare demo flow (browser open, logged-in accounts ready for both community user and professional):
+  1. Open app → feed shows local posts and articles
   2. Switch language to Spanish
-  3. Click "Ask AI" → ask a healthcare question in Spanish → get response
-  4. Click "Join Community" → show board → open a post → leave a comment
-  5. Create a new post
+  3. Open a post → read a professional reply → click translate
+  4. Sign in as a professional → see AI-suggested posts panel
+  5. Create a new post as a community user
 - [ ] **All** — 2-minute pitch outline:
-  - **Problem:** Hispanic communities face language and access barriers for education/healthcare/tech info
-  - **Solution:** AI chat in their language + a community of people who've been there
+  - **Problem:** Hispanic communities lack local, trusted, bilingual resources for education, healthcare, and tech
+  - **Solution:** Geolocation-based platform connecting community members with local verified professionals
   - **Demo:** live walkthrough
-  - **Impact:** what this could mean at scale
+  - **Impact:** what this could mean for underserved communities at scale
 
 ---
 
 ## Key Integration Risks
 
-| Risk                           | Mitigation                                                  |
-| ------------------------------ | ----------------------------------------------------------- |
-| Database setup takes too long  | D2 owns this solo in Hour 0, unblocks everyone by Hour 1    |
-| AI API key not working         | D3 tests in Hour 0, uses a mock response for dev mode       |
-| i18n slows D1 down             | Hardcode English first, add Spanish strings in Hours 9–11   |
-| Auth bugs block community work | D4 can build community UI with a hardcoded test user in dev |
+| Risk                                   | Mitigation                                                               |
+| -------------------------------------- | ------------------------------------------------------------------------ |
+| Geolocation permission denied          | D2 builds city/zip fallback in Hour 1, tested before integration         |
+| Translation API rate limit / cost      | D3 caches translations in DB after first request                         |
+| Feed empty at demo                     | D2 seeds database in Hours 1–5 with bilingual sample content             |
+| Professional verification unclear      | Keep it as a seeded DB flag — no UI flow needed for the demo             |
+| AI suggestion quality is low           | Fall back to category-based filtering if AI results are poor             |

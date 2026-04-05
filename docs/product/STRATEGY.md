@@ -1,4 +1,4 @@
-# Arroz con Code — Product Strategy
+# COMUNIDAD — Product Strategy
 
 > Why this app exists, who it's really competing with, and how to pitch it.
 
@@ -19,71 +19,89 @@ We are competing with silence and misinformation.
 
 ---
 
-## Our Differentiators
+## Why Geolocation Matters
 
-**Language as a first-class feature**
-Spanish is not a translation layer bolted on — it's the default. The AI responds in the
-language the user writes in. The UI is built bilingual from day one.
+Generic information is everywhere. What's missing is **local, trusted, relevant** information.
 
-**Trust through community**
-The community board surfaces answers from people who've lived the same experience.
-That carries more weight than a generic AI response or a .gov page.
+- A healthcare question in Los Angeles has a different answer than in rural Texas
+- Local professionals know local resources — clinics that accept Medicaid, community colleges with Spanish-language programs, tech workshops nearby
+- Geolocation turns a generic forum into a neighborhood resource
 
-**Low barrier to get value**
-No login required to read posts or use the AI. A user can get help in under 60 seconds
-without creating an account.
+The ~20–30 mile radius is intentional: close enough to be actionable, wide enough to have real density.
 
 ---
 
-## On the "Resistant to New Tech" Concern
+## Our Differentiators
 
-The demographic is not resistant to tech — they are resistant to tech that wasn't built
-for them. WhatsApp adoption in Latino communities is extremely high. The barrier is
-language and institutional trust, not tech literacy.
+**Geolocation as the core**
+The feed is not global. Every post and article you see is from someone near you — making
+answers more relevant and connections more real.
 
-Building for this community means:
+**Verified professionals in the community**
+Not just community members helping each other — actual doctors, teachers, and tech professionals
+who are verified and surface relevant questions from their area to answer.
 
-- Spanish first, not Spanish as an option
-- Warm, community tone — not clinical or bureaucratic
-- Trust signals: real people posting real experiences alongside the AI
+**Translation on demand, not forced**
+Rather than auto-translating everything (which can feel patronizing or inaccurate), users
+choose to translate individual posts. This respects bilingual users while still serving
+those who need it.
+
+**Language as a first-class feature**
+Spanish is not a translation layer bolted on — it's the default. The UI is built bilingual
+from day one.
+
+**Trust through community**
+The board surfaces answers from people and professionals who've lived the same experience.
+That carries more weight than a generic AI response or a .gov page.
+
+---
+
+## On the "Why Not Just AI Chat?" Question
+
+AI chat is everywhere now. Every phone has it. Every browser has it.
+What AI chat can't give you is a local professional who actually knows your neighborhood clinic
+or the specific scholarship your community college offers.
+
+COMUNIDAD's value is **local human expertise**, not generic AI answers.
+The AI in our app works behind the scenes — helping professionals discover which community
+questions need their expertise. It's infrastructure, not the product.
 
 ---
 
 ## Real Risks to Address
 
-| Risk                                  | Why It Matters                                                                                         |
-| ------------------------------------- | ------------------------------------------------------------------------------------------------------ |
-| AI gives a bad healthcare answer      | Trust is lost immediately — especially in a demographic with existing reasons to distrust institutions |
-| Onboarding feels complicated          | High drop-off; the alternative (WhatsApp) requires zero setup                                          |
-| Community board stays empty at launch | An empty board kills the value prop — seed it with real content before demoing                         |
+| Risk                                      | Why It Matters                                                                             |
+| ----------------------------------------- | ------------------------------------------------------------------------------------------ |
+| Feed is empty at launch (no local posts)  | Seed with real content before demo — an empty feed kills the value prop immediately        |
+| Professional verification takes too long  | Scope verification to a simple manual flag for the hackathon; expand post-launch           |
+| Translation feels off or breaks trust     | Use a well-regarded translation API; add a disclaimer that translation is AI-assisted      |
+| Geolocation permission denied by browser  | Always have a graceful fallback — ask user to enter a zip code or city manually            |
 
 ---
 
 ## Pitch Strategy
 
-**Lead with the community board, not the AI.**
-People trust people. The AI is the utility feature that gives fast answers.
-The community is the reason they come back.
+**Lead with the geolocation + professional angle.**
+The combination of "near me" + "verified expert" is what makes this different from any generic forum.
 
 **Frame the problem emotionally, then solve it practically:**
 
-> "When someone in our community needs to understand their insurance, or find a
-> scholarship, or figure out what AI tools are actually useful — where do they go?
-> We built the place they've been missing."
+> "When someone in our community needs to find a local doctor who speaks Spanish, understand
+> a scholarship deadline, or figure out what AI tools are actually useful for their job —
+> where do they go? We built the place they've been missing."
 
 **The goal for the hackathon demo:**
-Show that a Spanish-speaking user can land on the app, get a real answer in Spanish
-from the AI, and see a community of people who've dealt with the same thing —
-all without creating an account.
+Show that a user can open the app, see posts from their area, get a real answer from a
+verified local professional, and read it in their language — in under 60 seconds.
 
 ---
 
 ## What Marketability Actually Looks Like
 
-Marketable as a concept: yes — the problem is real and underserved.
+Marketable as a concept: yes — the problem is real, underserved, and local.
 
 The risk is not whether the demographic will use it.
-The risk is earning the trust of the first 50 users.
+The risk is earning the trust of the first local professionals to join.
 That is a go-to-market problem, not a product problem — and it's out of scope for the hackathon.
 
 For the pitch, the judges care about:

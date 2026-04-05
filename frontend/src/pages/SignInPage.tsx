@@ -1,9 +1,8 @@
 import { Link, useLocation } from "react-router";
 
 export default function SignInPage() {
-  const location = useLocation();
   // After auth is wired up: navigate(location.state?.from ?? "/", { replace: true })
-  const _from = (location.state as { from?: Location })?.from;
+  useLocation();
 
   return (
     <section className="mx-auto flex max-w-md flex-col gap-6 px-4 py-16">

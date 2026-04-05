@@ -1,41 +1,43 @@
 import { createBrowserRouter } from "react-router";
 import RootLayout from "./layouts/RootLayout";
-import AppLayout from "./layouts/AppLayout";
 import ProtectedRoute from "./components/ProtectedRoute";
-import LandingPage from "./pages/LandingPage";
+import ProfessionalRoute from "./components/ProfessionalRoute";
+import FeedPage from "./pages/FeedPage";
 import SignUpPage from "./pages/SignUpPage";
 import SignInPage from "./pages/SignInPage";
-import ChatPage from "./pages/ChatPage";
-import CommunityBoardPage from "./pages/CommunityBoardPage";
 import PostDetailPage from "./pages/PostDetailPage";
 import CreatePostPage from "./pages/CreatePostPage";
+import ArticleDetailPage from "./pages/ArticleDetailPage";
+import CreateArticlePage from "./pages/CreateArticlePage";
+import ProfilePage from "./pages/ProfilePage";
 import SettingsPage from "./pages/SettingsPage";
 
 export const router = createBrowserRouter([
-  // Landing page — full navbar, marketing layout
   {
     element: <RootLayout />,
     children: [
-      { path: "/", element: <LandingPage /> },
-    ],
-  },
-  // App pages — slim top bar + bottom nav + FAB
-  {
-    element: <AppLayout />,
-    children: [
+      { path: "/", element: <FeedPage /> },
       { path: "/signup", element: <SignUpPage /> },
       { path: "/signin", element: <SignInPage /> },
-      { path: "/chat", element: <ChatPage /> },
-      { path: "/community", element: <CommunityBoardPage /> },
+      { path: "/post/:id", element: <PostDetailPage /> },
       {
-        path: "/community/new",
+        path: "/post/new",
         element: (
           <ProtectedRoute>
             <CreatePostPage />
           </ProtectedRoute>
         ),
       },
-      { path: "/community/:id", element: <PostDetailPage /> },
+      { path: "/article/:id", element: <ArticleDetailPage /> },
+      {
+        path: "/article/new",
+        element: (
+          <ProfessionalRoute>
+            <CreateArticlePage />
+          </ProfessionalRoute>
+        ),
+      },
+      { path: "/profile/:id", element: <ProfilePage /> },
       {
         path: "/settings",
         element: (
