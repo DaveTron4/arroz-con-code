@@ -4,7 +4,7 @@ import axios from 'axios';
 import { GoogleGenerativeAI } from '@google/generative-ai';
 
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY as string);
-const model = genAI.getGenerativeModel({ model: 'gemini-pro' });
+const model = genAI.getGenerativeModel({ model: 'gemini-2.5-flash' });
 
 const NOMINATIM_URL = 'https://nominatim.openstreetmap.org/search';
 
