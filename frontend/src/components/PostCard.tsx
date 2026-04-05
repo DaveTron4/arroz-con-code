@@ -54,7 +54,7 @@ function detectLanguage(text: string): "en" | "es" {
 }
 
 export default function PostCard({ post }: PostCardProps) {
-  const { factCheck, loading: factCheckLoading } = useFactCheck(post.id);
+  const { factCheck, loading: factCheckLoading, refetch: refetchFactCheck } = useFactCheck(post.id);
   const { user } = useAuth();
   const [translatedText, setTranslatedText] = useState<string | null>(null);
   const [isShowingTranslated, setIsShowingTranslated] = useState(false);
@@ -94,16 +94,24 @@ export default function PostCard({ post }: PostCardProps) {
   // Auto-trigger fact-check if not yet checked
   useEffect(() => {
     if (factCheck && !factCheck.isFactChecked && post.id) {
-      // Trigger fact-check asynchronously
-      factCheckAPI.triggerFactCheck(post.id).catch(() => {
+      // Trigger fact-check and refetch results
+      factCheckAPI.triggerFactCheck(post.id).then(() => {
+        // Refetch fact-check data after triggering
+        setTimeout(() => refetchFactCheck(), 500);
+      }).catch(() => {
         console.log('Fact-check trigger started (results will update when available)');
       });
     }
-  }, [factCheck?.isFactChecked, post.id]);
+  }, [factCheck?.isFactChecked, post.id, refetchFactCheck]);
 
   return (
     <article className="border-b border-gray-100 px-4 py-4 hover:bg-gray-50">
       <div className="flex flex-wrap items-center gap-2 mb-2">
+        {post.type === "article" && (
+          <span className="inline-flex items-center gap-1 rounded-full bg-purple-50 px-2 py-0.5 text-xs font-medium text-purple-700">
+            📰 Article
+          </span>
+        )}
         <span
           className={`rounded-full px-2 py-0.5 text-xs font-medium ${CATEGORY_COLORS[category]}`}
         >

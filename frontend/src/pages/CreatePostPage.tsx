@@ -7,7 +7,7 @@ const CATEGORIES = ["Education", "Healthcare", "New Tech"] as const;
 
 export default function CreatePostPage() {
   const navigate = useNavigate();
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, user } = useAuth();
   const { createPost, loading, error } = useCreatePost();
 
   const [title, setTitle] = useState("");
@@ -17,6 +17,8 @@ export default function CreatePostPage() {
   const [coordinates, setCoordinates] = useState<{ latitude: number; longitude: number } | null>(null);
   const [geoError, setGeoError] = useState<string | null>(null);
   const [formError, setFormError] = useState<string | null>(null);
+  const [isArticle, setIsArticle] = useState(false);
+  const isProfessional = user?.role === "professional";
 
   // Redirect if not authenticated
   useEffect(() => {
@@ -65,10 +67,17 @@ export default function CreatePostPage() {
     }
 
     try {
+      // Only professionals can create articles
+      if (isArticle && !isProfessional) {
+        setFormError("Only professionals can create articles");
+        return;
+      }
+
       const postData = {
         title: title.trim(),
         body: body.trim(),
         category,
+        type: isArticle ? "article" : "post",
         latitude: coordinates?.latitude,
         longitude: coordinates?.longitude,
         locationName: locationName || undefined,
@@ -161,6 +170,22 @@ export default function CreatePostPage() {
             ))}
           </select>
         </div>
+
+        {isProfessional && (
+          <div className="flex items-center gap-2 rounded-md bg-indigo-50 p-3">
+            <input
+              id="isArticle"
+              type="checkbox"
+              checked={isArticle}
+              onChange={(e) => setIsArticle(e.target.checked)}
+              disabled={loading}
+              className="rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
+            />
+            <label htmlFor="isArticle" className="text-sm font-medium text-gray-700">
+              📰 Publish as Professional Article
+            </label>
+          </div>
+        )}
 
         {coordinates && (
           <div className="flex flex-col gap-1">

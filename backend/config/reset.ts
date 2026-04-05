@@ -39,6 +39,7 @@ const resetDatabase = async () => {
         latitude FLOAT,
         longitude FLOAT,
         location_name VARCHAR(255),
+        preferred_language VARCHAR(10) DEFAULT 'en',
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         deleted_at TIMESTAMP

@@ -16,7 +16,7 @@ export default function ArticleDetailPage() {
   const postId = parseInt(id!);
 
   const { post, loading, error } = usePost(postId);
-  const { factCheck, loading: factCheckLoading } = useFactCheck(postId);
+  const { factCheck, loading: factCheckLoading, refetch: refetchFactCheck } = useFactCheck(postId);
   const [translatedBody, setTranslatedBody] = useState<string | null>(null);
 
   if (loading) {
@@ -56,12 +56,15 @@ export default function ArticleDetailPage() {
   // Auto-trigger fact-check if not yet checked
   useEffect(() => {
     if (factCheck && !factCheck.isFactChecked && postId) {
-      // Trigger fact-check asynchronously
-      factCheckAPI.triggerFactCheck(postId).catch(() => {
+      // Trigger fact-check and refetch results
+      factCheckAPI.triggerFactCheck(postId).then(() => {
+        // Refetch fact-check data after triggering
+        setTimeout(() => refetchFactCheck(), 500);
+      }).catch(() => {
         console.log('Fact-check trigger started (results will update when available)');
       });
     }
-  }, [factCheck?.isFactChecked, postId]);
+  }, [factCheck?.isFactChecked, postId, refetchFactCheck]);
 
   return (
     <section className="mx-auto max-w-2xl px-4 py-8">
@@ -74,6 +77,11 @@ export default function ArticleDetailPage() {
 
       {/* Category + fact check */}
       <div className="flex flex-wrap items-center gap-2">
+        <span
+          className="inline-flex items-center gap-1 rounded-full bg-purple-50 px-3 py-1 text-xs font-medium text-purple-700"
+        >
+          📰 Article
+        </span>
         <span
           className={`rounded-full px-3 py-1 text-xs font-medium ${categoryColor}`}
         >

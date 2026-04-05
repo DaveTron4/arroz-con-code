@@ -225,25 +225,25 @@ export function useFactCheck(postId: number) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
-    const fetchFactCheck = async () => {
-      setLoading(true);
-      setError(null);
-      try {
-        const data = await factCheckAPI.getFactCheck(postId);
-        setFactCheck(data);
-      } catch (err) {
-        // Fact check might not exist yet, that's ok
-        setFactCheck(null);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchFactCheck();
+  const fetchFactCheck = useCallback(async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      const data = await factCheckAPI.getFactCheck(postId);
+      setFactCheck(data);
+    } catch (err) {
+      // Fact check might not exist yet, that's ok
+      setFactCheck(null);
+    } finally {
+      setLoading(false);
+    }
   }, [postId]);
 
-  return { factCheck, loading, error };
+  useEffect(() => {
+    fetchFactCheck();
+  }, [fetchFactCheck]);
+
+  return { factCheck, loading, error, refetch: fetchFactCheck };
 }
 
 /**

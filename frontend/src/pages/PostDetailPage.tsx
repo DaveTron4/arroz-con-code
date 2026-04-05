@@ -102,6 +102,11 @@ export default function PostDetailPage() {
       {/* Post */}
       <article>
         <div className="mb-3 flex flex-wrap items-center gap-2">
+          {post.type === "article" && (
+            <span className="inline-flex items-center gap-1 rounded-full bg-purple-50 px-2 py-0.5 text-xs font-medium text-purple-700">
+              📰 Article
+            </span>
+          )}
           <span className="rounded-full bg-indigo-50 px-2 py-0.5 text-xs font-medium text-indigo-700">
             {post.category}
           </span>
