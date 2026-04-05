@@ -319,19 +319,19 @@ export const factCheckAPI = {
     apiCall<{
       postId: number;
       isFactChecked: boolean;
-      status: string;
-      result: string;
-      confidenceScore: number;
-      checkedAt: string;
+      status: string | null;
+      result: string | null;
+      confidenceScore: number | null;
+      checkedAt: string | null;
     }>(`/fact-checks/${postId}`),
 
   triggerFactCheck: (postId: number) =>
     apiCall<{
       postId: number;
       isFactChecked: boolean;
-      status: string;
-      result: string;
-      confidenceScore: number;
+      status: string | null;
+      result: string | null;
+      confidenceScore: number | null;
     }>(`/fact-checks/${postId}/trigger`, {
       method: 'POST',
     }),

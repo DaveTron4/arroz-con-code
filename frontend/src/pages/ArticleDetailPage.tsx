@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useParams, Link } from "react-router";
 import { usePost, useFactCheck } from "../hooks/useApi";
 import ProfessionalBadge from "../components/ProfessionalBadge";
@@ -7,6 +7,7 @@ import FactCheckBadge from "../components/FactCheckBadge";
 import LikeButton from "../components/LikeButton";
 import { formatTime } from "../utils/formatTime";
 import type { Category } from "../types";
+import { factCheckAPI } from "../services/api";
 
 import { CATEGORY_COLORS } from "../utils/categories";
 
@@ -51,6 +52,16 @@ export default function ArticleDetailPage() {
   const categoryColor =
     CATEGORY_COLORS[post.category as Category] || "bg-gray-50 text-gray-700";
   const displayBody = translatedBody || post.body;
+
+  // Auto-trigger fact-check if not yet checked
+  useEffect(() => {
+    if (factCheck && !factCheck.isFactChecked && postId) {
+      // Trigger fact-check asynchronously
+      factCheckAPI.triggerFactCheck(postId).catch(() => {
+        console.log('Fact-check trigger started (results will update when available)');
+      });
+    }
+  }, [factCheck?.isFactChecked, postId]);
 
   return (
     <section className="mx-auto max-w-2xl px-4 py-8">

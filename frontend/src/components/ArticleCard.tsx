@@ -4,6 +4,7 @@ import { useFactCheck } from "../hooks/useApi";
 import { useAuth } from "../context/AuthContext";
 import { CATEGORY_COLORS } from "../utils/categories";
 import type { Post, Category } from "../types";
+import { factCheckAPI } from "../services/api";
 import ProfessionalBadge from "./ProfessionalBadge";
 import FactCheckBadge from "./FactCheckBadge";
 import LikeButton from "./LikeButton";
@@ -94,6 +95,16 @@ export default function ArticleCard({
       // We'll let the user manually trigger translation if they want
     }
   }, [needsTranslation, user?.preferredLanguage, isShowingTranslated, isAutoTranslating]);
+
+  // Auto-trigger fact-check if not yet checked
+  useEffect(() => {
+    if (factCheck && !factCheck.isFactChecked && post.id) {
+      // Trigger fact-check asynchronously
+      factCheckAPI.triggerFactCheck(post.id).catch(() => {
+        console.log('Fact-check trigger started (results will update when available)');
+      });
+    }
+  }, [factCheck?.isFactChecked, post.id]);
 
   return (
     <article className="border-b border-gray-100 px-4 py-4 hover:bg-gray-50">

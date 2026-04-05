@@ -164,7 +164,17 @@ const createPost = async (req: Request, res: Response) => {
             [userId, title, body, category, postType, imageUrl ?? null, latitude ?? null, longitude ?? null, locationName ?? null]
         );
 
-        res.status(201).json(result.rows[0]);
+        const newPost = result.rows[0];
+        const postId = newPost.id;
+
+        // Create an empty fact-check record for the post
+        await pool.query(
+            `INSERT INTO fact_checks (post_id, original_text, is_fact_checked, fact_check_status, fact_check_result, confidence_score, checked_at)
+             VALUES ($1, $2, false, NULL, NULL, NULL, NULL)`,
+            [postId, body]
+        );
+
+        res.status(201).json(newPost);
     } catch (err) {
         console.error('Error creating post:', err);
         res.status(500).json({ error: 'Internal server error' });

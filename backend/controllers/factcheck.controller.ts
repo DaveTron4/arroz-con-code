@@ -66,8 +66,7 @@ export const factCheckPost = async (req: Request, res: Response): Promise<void> 
     // Call Gemini API
     console.log(`🔍 Fact-checking post ${postId} with Gemini...`);
     const result = await model.generateContent(promptText);
-    const response = await result.response;
-    const responseText = response.text();
+    const responseText = result.response.text();
 
     // Parse Gemini response
     let factCheckResult: FactCheckResult;
@@ -128,7 +127,9 @@ export const factCheckPost = async (req: Request, res: Response): Promise<void> 
     console.log(`✅ Fact-check complete for post ${postId}: ${factCheckResult.status}`);
   } catch (err) {
     console.error('Error during fact-checking:', err);
-    res.status(500).json({ error: 'An error occurred during fact-checking' });
+    const errorMessage = err instanceof Error ? err.message : String(err);
+    console.error('Error details:', errorMessage);
+    res.status(500).json({ error: 'An error occurred during fact-checking', details: errorMessage });
   }
 };
 
@@ -151,7 +152,15 @@ export const getFactCheck = async (req: Request, res: Response): Promise<void> =
     );
 
     if (result.rows.length === 0) {
-      res.status(404).json({ error: 'No fact-check found for this post' });
+      // Return null/pending fact-check instead of 404
+      res.status(200).json({
+        postId,
+        isFactChecked: false,
+        status: null,
+        result: null,
+        confidenceScore: null,
+        checkedAt: null,
+      } as FactCheckResponse);
       return;
     }
 
@@ -213,8 +222,7 @@ export const triggerFactCheck = async (req: Request, res: Response): Promise<voi
     // Call Gemini API
     console.log(`🔍 Manually triggering fact-check for post ${postId}...`);
     const result = await model.generateContent(promptText);
-    const response = await result.response;
-    const responseText = response.text();
+    const responseText = result.response.text();
 
     // Parse Gemini response
     let factCheckResult: FactCheckResult;
@@ -276,7 +284,9 @@ export const triggerFactCheck = async (req: Request, res: Response): Promise<voi
     console.log(`✅ Manual fact-check triggered for post ${postId}: ${factCheckResult.status}`);
   } catch (err) {
     console.error('Error triggering fact-check:', err);
-    res.status(500).json({ error: 'An error occurred while triggering fact-check' });
+    const errorMessage = err instanceof Error ? err.message : String(err);
+    console.error('Error details:', errorMessage);
+    res.status(500).json({ error: 'An error occurred while triggering fact-check', details: errorMessage });
   }
 };
 

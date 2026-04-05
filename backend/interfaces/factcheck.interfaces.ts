@@ -11,10 +11,10 @@ export interface FactCheckRequest {
 export interface FactCheckResponse {
   postId: number;
   isFactChecked: boolean;
-  status: 'verified' | 'misleading' | 'false' | 'unverifiable';
-  result: string;
-  confidenceScore: number; // 0-1
-  checkedAt: string;
+  status: 'verified' | 'misleading' | 'false' | 'unverifiable' | null;
+  result: string | null;
+  confidenceScore: number | null;
+  checkedAt: string | null;
 }
 
 export interface FactCheckResult {
