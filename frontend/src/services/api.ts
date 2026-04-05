@@ -186,7 +186,12 @@ export const postsAPI = {
       longitude: number | null;
       locationName: string | null;
       createdAt: string;
-      updatedAt: string;
+      authorUsername: string;
+      authorDisplayName: string | null;
+      authorAvatarUrl: string | null;
+      authorRole: string;
+      likeCount: number;
+      commentCount: number;
     }>(`/posts/${postId}`),
 
   createPost: (data: {

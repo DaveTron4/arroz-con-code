@@ -86,7 +86,7 @@ export default function PostDetailPage() {
   }
 
   const authorDisplay =
-    post.author_display_name || post.author_username || "Anonymous";
+    post.authorDisplayName || post.authorUsername || "Anonymous";
   const displayBody = translatedBody || post.body;
 
   return (
@@ -113,16 +113,16 @@ export default function PostDetailPage() {
             />
           )}
           <span className="text-xs text-gray-400">
-            {authorDisplay} · {formatTime(post.created_at || post.createdAt)}
+            {authorDisplay} · {formatTime(post.createdAt)}
           </span>
         </div>
 
         <h1 className="text-2xl font-bold text-gray-900">{post.title}</h1>
         <p className="mt-4 whitespace-pre-wrap text-gray-700">{displayBody}</p>
 
-        {post.location_name || post.locationName ? (
+        {post.locationName ? (
           <p className="mt-3 text-xs text-gray-400">
-            📍 {post.location_name || post.locationName}
+            📍 {post.locationName}
           </p>
         ) : null}
 

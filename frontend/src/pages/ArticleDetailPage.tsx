@@ -47,7 +47,7 @@ export default function ArticleDetailPage() {
   }
 
   const authorDisplay =
-    post.author_display_name || post.author_username || "Anonymous";
+    post.authorDisplayName || post.authorUsername || "Anonymous";
   const initial = authorDisplay.charAt(0).toUpperCase();
   const categoryColor =
     CATEGORY_COLORS[post.category as Category] || "bg-gray-50 text-gray-700";
@@ -100,13 +100,13 @@ export default function ArticleDetailPage() {
           <ProfessionalBadge />
         </div>
         <span className="ml-auto text-xs text-gray-400">
-          {formatTime(post.created_at || post.createdAt)}
+          {formatTime(post.createdAt)}
         </span>
       </div>
 
-      {post.location_name || post.locationName ? (
+      {post.locationName ? (
         <p className="mt-2 text-xs text-gray-400">
-          📍 {post.location_name || post.locationName}
+          📍 {post.locationName}
         </p>
       ) : null}
 
