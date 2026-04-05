@@ -7,6 +7,9 @@ const router = Router();
 // Get all posts (PUBLIC - no auth required)
 router.get('/', postsController.getAllPosts);
 
+// Get a single post by ID (PUBLIC)
+router.get('/:id', postsController.getPostById);
+
 // Create a post (PROTECTED - auth required)
 router.post('/', authenticateToken, postsController.createPost);
 
