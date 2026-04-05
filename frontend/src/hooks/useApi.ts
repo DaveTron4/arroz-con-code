@@ -16,6 +16,7 @@ import {
  */
 export function usePosts(params?: {
   category?: string;
+  userId?: number;
   latitude?: number;
   longitude?: number;
   radius?: number;

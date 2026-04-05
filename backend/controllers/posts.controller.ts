@@ -6,7 +6,7 @@ import type { CreatePostRequest } from '../interfaces/posts.interfaces.ts';
 // Public - supports ?category=Education&latitude=X&longitude=Y&radius=5&page=1&limit=10
 const getAllPosts = async (req: Request, res: Response) => {
     try {
-        const { category, latitude, longitude, radius, page = '1', limit = '10' } = req.query;
+        const { category, userId, latitude, longitude, radius, page = '1', limit = '10' } = req.query;
 
         const pageNum = Math.max(1, parseInt(page as string));
         const limitNum = Math.min(50, Math.max(1, parseInt(limit as string)));
@@ -18,6 +18,11 @@ const getAllPosts = async (req: Request, res: Response) => {
         if (category) {
             params.push(category);
             conditions.push(`category = $${params.length}`);
+        }
+
+        if (userId) {
+            params.push(parseInt(userId as string));
+            conditions.push(`user_id = $${params.length}`);
         }
 
         // Radius filter using Haversine formula (radius in km, default 10km)

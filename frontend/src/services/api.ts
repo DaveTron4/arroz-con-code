@@ -128,6 +128,7 @@ export const authAPI = {
 export const postsAPI = {
   getPosts: (params?: {
     category?: string;
+    userId?: number;
     latitude?: number;
     longitude?: number;
     radius?: number;
