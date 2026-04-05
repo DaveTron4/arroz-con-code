@@ -3,7 +3,7 @@
  * Toggle like on posts and comments
  */
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useLike, usePostLikes } from '../hooks/useApi';
 
 interface LikeButtonProps {
@@ -19,9 +19,17 @@ export default function LikeButton({
 }: LikeButtonProps) {
   const { togglePostLike, loading: togglingLike } = useLike();
   const { likeCount: fetchedCount, userLiked: fetchedLiked, loading: fetchingLikes } = usePostLikes(postId);
-  const [liked, setLiked] = useState(initialLiked || fetchedLiked);
-  const [count, setCount] = useState(initialCount || fetchedCount);
+  const [liked, setLiked] = useState(initialLiked);
+  const [count, setCount] = useState(initialCount);
   const [error, setError] = useState<string | null>(null);
+
+  // Sync fetched like data when it changes
+  useEffect(() => {
+    if (!fetchingLikes) {
+      setLiked(fetchedLiked);
+      setCount(fetchedCount);
+    }
+  }, [fetchedCount, fetchedLiked, fetchingLikes]);
 
   const loading = togglingLike || fetchingLikes;
 
