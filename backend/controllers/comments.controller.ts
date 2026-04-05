@@ -18,7 +18,21 @@ const getComments = async (req: Request, res: Response) => {
         }
 
         const result = await pool.query(
-            'SELECT * FROM comments_with_stats WHERE post_id = $1 ORDER BY like_count DESC, created_at ASC',
+            `SELECT
+                id,
+                post_id AS "postId",
+                user_id AS "userId",
+                username,
+                display_name AS "displayName",
+                avatar_url AS "avatarUrl",
+                body,
+                image_url AS "imageUrl",
+                created_at AS "createdAt",
+                like_count AS "likeCount",
+                reply_count AS "replyCount"
+             FROM comments_with_stats
+             WHERE post_id = $1
+             ORDER BY like_count DESC, created_at ASC`,
             [postId]
         );
 
@@ -50,7 +64,14 @@ const createComment = async (req: Request, res: Response) => {
         const result = await pool.query(
             `INSERT INTO comments (post_id, user_id, body, image_url)
              VALUES ($1, $2, $3, $4)
-             RETURNING *`,
+             RETURNING
+                id,
+                post_id AS "postId",
+                user_id AS "userId",
+                body,
+                image_url AS "imageUrl",
+                created_at AS "createdAt",
+                updated_at AS "updatedAt"`,
             [postId, userId, body, imageUrl ?? null]
         );
 
@@ -88,7 +109,14 @@ const updateComment = async (req: Request, res: Response) => {
             `UPDATE comments
              SET body = COALESCE($1, body), updated_at = NOW()
              WHERE id = $2
-             RETURNING *`,
+             RETURNING
+                id,
+                post_id AS "postId",
+                user_id AS "userId",
+                body,
+                image_url AS "imageUrl",
+                created_at AS "createdAt",
+                updated_at AS "updatedAt"`,
             [body, commentId]
         );
 

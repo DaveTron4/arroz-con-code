@@ -1,4 +1,15 @@
+import { useNavigate } from "react-router";
+import { useAuth } from "../context/AuthContext";
+
 export default function SettingsPage() {
+  const { logout } = useAuth();
+  const navigate = useNavigate();
+
+  function handleLogout() {
+    logout();
+    navigate("/");
+  }
+
   return (
     <section className="mx-auto max-w-2xl px-4 py-10">
       <h1 className="mb-8 text-2xl font-bold text-gray-900">Settings</h1>
@@ -55,6 +66,15 @@ export default function SettingsPage() {
           Save Changes
         </button>
       </form>
+
+      <hr className="my-8 border-gray-200" />
+
+      <button
+        onClick={handleLogout}
+        className="rounded-md border border-red-200 px-6 py-2 text-sm font-semibold text-red-600 hover:bg-red-50"
+      >
+        Sign Out
+      </button>
     </section>
   );
 }

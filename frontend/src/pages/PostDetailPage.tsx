@@ -1,22 +1,17 @@
 import { useState } from "react";
 import { useParams, Link } from "react-router";
-import { usePost, useComments, useCreateComment, useFactCheck } from "../hooks/useApi";
+import {
+  usePost,
+  useComments,
+  useCreateComment,
+  useFactCheck,
+} from "../hooks/useApi";
 import { commentsAPI } from "../services/api";
 import { useAuth } from "../context/AuthContext";
 import LikeButton from "../components/LikeButton";
 import TranslateButton from "../components/TranslateButton";
 import FactCheckBadge from "../components/FactCheckBadge";
-
-function formatTime(dateString: string): string {
-  const date = new Date(dateString);
-  const now = new Date();
-  const secondsAgo = Math.floor((now.getTime() - date.getTime()) / 1000);
-  if (secondsAgo < 60) return "now";
-  if (secondsAgo < 3600) return `${Math.floor(secondsAgo / 60)}m ago`;
-  if (secondsAgo < 86400) return `${Math.floor(secondsAgo / 3600)}h ago`;
-  if (secondsAgo < 604800) return `${Math.floor(secondsAgo / 86400)}d ago`;
-  return date.toLocaleDateString();
-}
+import { formatTime } from "../utils/formatTime";
 
 export default function PostDetailPage() {
   const { id } = useParams<{ id: string }>();
@@ -24,7 +19,11 @@ export default function PostDetailPage() {
   const { user, isAuthenticated } = useAuth();
 
   const { post, loading: postLoading, error: postError } = usePost(postId);
-  const { comments, loading: commentsLoading, refetch: refetchComments } = useComments(postId);
+  const {
+    comments,
+    loading: commentsLoading,
+    refetch: refetchComments,
+  } = useComments(postId);
   const { createComment, loading: submitting } = useCreateComment();
   const { factCheck, loading: factCheckLoading } = useFactCheck(postId);
 
@@ -42,7 +41,9 @@ export default function PostDetailPage() {
       setCommentBody("");
       refetchComments();
     } catch (err) {
-      setCommentError(err instanceof Error ? err.message : "Failed to post comment");
+      setCommentError(
+        err instanceof Error ? err.message : "Failed to post comment",
+      );
     }
   }
 
@@ -74,20 +75,27 @@ export default function PostDetailPage() {
     return (
       <section className="mx-auto max-w-3xl px-4 py-10">
         <p className="text-sm text-red-600">{postError || "Post not found."}</p>
-        <Link to="/" className="mt-4 inline-block text-sm text-indigo-600 hover:underline">
+        <Link
+          to="/"
+          className="mt-4 inline-block text-sm text-indigo-600 hover:underline"
+        >
           Back to feed
         </Link>
       </section>
     );
   }
 
-  const authorDisplay = post.author_display_name || post.author_username || "Anonymous";
+  const authorDisplay =
+    post.author_display_name || post.author_username || "Anonymous";
   const displayBody = translatedBody || post.body;
 
   return (
     <section className="mx-auto max-w-3xl px-4 py-10">
       {/* Back */}
-      <Link to="/" className="mb-6 inline-block text-sm text-indigo-600 hover:underline">
+      <Link
+        to="/"
+        className="mb-6 inline-block text-sm text-indigo-600 hover:underline"
+      >
         ← Back to feed
       </Link>
 

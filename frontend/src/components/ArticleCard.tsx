@@ -121,7 +121,7 @@ export default function ArticleCard({
           {category}
         </span>
         {isVerified && <ProfessionalBadge />}
-        
+
         {factCheck && (
           <FactCheckBadge
             status={factCheck.status as any}
@@ -149,9 +149,7 @@ export default function ArticleCard({
       </Link>
 
       {post.locationName && (
-        <p className="mt-2 text-xs text-gray-400">
-          📍 {post.locationName}
-        </p>
+        <p className="mt-2 text-xs text-gray-400">📍 {post.locationName}</p>
       )}
 
       <div className="mt-3 flex items-center gap-4">

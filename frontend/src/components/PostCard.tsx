@@ -115,7 +115,7 @@ export default function PostCard({ post }: PostCardProps) {
         >
           {category}
         </span>
-        
+
         {factCheck && (
           <FactCheckBadge
             status={factCheck.status as any}
@@ -143,9 +143,7 @@ export default function PostCard({ post }: PostCardProps) {
       </Link>
 
       {post.locationName && (
-        <p className="mt-2 text-xs text-gray-400">
-          📍 {post.locationName}
-        </p>
+        <p className="mt-2 text-xs text-gray-400">📍 {post.locationName}</p>
       )}
 
       <div className="mt-3 flex items-center gap-4">
